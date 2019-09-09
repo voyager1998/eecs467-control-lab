@@ -1,0 +1,7 @@
+# latex binary files 
+*.aux
+*.log
+*.synctex*
+
+# c/c++ binary files 
+*.o
