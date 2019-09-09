@@ -1,0 +1,11 @@
+Edit the wpa_supplicant.conf file with your preferred wifi network 
+as the second entry
+
+Copy the wpa_supplicant.conf file to /etc/wpa_supplicant/wpa_supplicant.conf
+
+The priorities are set so that the MBot will connect to the preferred network.
+If this network cannot be found it will connect to MGuest.
+
+The connection must be made using DHCP, and not static addressing.
+Ask about getting a reserved IP associated with your MAC address
+on your preferred router 

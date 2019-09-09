@@ -1,0 +1,11 @@
+Place the folder 'pi' in the home directory of the user pi (i.e. /home/pi/) on the RaspberryPi
+Place the folder 'beaglebone' in the home directory of the user debian (/home/debian/) on the Beaglebone
+
+These scripts are launched at boot time by rc.local on both the RPi and BB.
+
+If you are setting this up on a fresh install, you will need to modify /etc/rc.local to launch
+launch these scripts.  If you have a provided pre-confgured SD card, this will have been done.
+
+You will need to set up the paths to your projects bin folder in this script for the script to 
+properly work.
+
