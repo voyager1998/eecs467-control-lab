@@ -5,3 +5,6 @@
 
 # c/c++ binary files 
 *.o
+
+# vscode config files
+.vscode
