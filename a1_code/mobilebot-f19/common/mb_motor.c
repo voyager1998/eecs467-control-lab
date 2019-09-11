@@ -13,7 +13,7 @@
 #include "mb_motor.h"
 #include "mb_defs.h"
 
-// preposessor macros
+// preprocessor macros
 #define unlikely(x) __builtin_expect (!!(x), 0)
 
 // global initialized flag
