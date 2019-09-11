@@ -83,5 +83,6 @@ void timesync_handler(const lcm_recv_buf_t * rbuf,
 void* setpoint_control_loop(void* ptr);
 void* printf_loop(void* ptr);
 void* lcm_subscribe_loop(void* ptr);
+void* motor_loop(void* ptr);
 
 #endif

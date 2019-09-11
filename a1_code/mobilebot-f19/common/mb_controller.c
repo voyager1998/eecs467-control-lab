@@ -98,6 +98,7 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 
     // TODO(EECS467) calculate left wheel and right wheel set point velocities
     // properly.
+    // FIXME
     left_sp = 0;
     right_sp = 0;
 

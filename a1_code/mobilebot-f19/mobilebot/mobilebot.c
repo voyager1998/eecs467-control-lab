@@ -90,6 +90,41 @@ int main(){
 	printf("we are running!!!\n");
 	// done initializing so set state to RUNNING
 	rc_set_state(RUNNING); 
+    if(rc_get_state()==RUNNING){
+#ifdef MRC_VERSION_2v1
+		mb_motor_brake(1);
+#endif
+		//run right forward for 1s
+        printf("Right FWD\n");
+		mb_motor_set(RIGHT_MOTOR, 0.8);
+		mb_motor_set(LEFT_MOTOR, 0.0);
+		rc_nanosleep(1E9);
+		//run left forward for 1s
+        printf("Left FWD\n");
+		mb_motor_set(RIGHT_MOTOR, 0.0);
+		mb_motor_set(LEFT_MOTOR, 0.8);
+		rc_nanosleep(1E9);
+		//run left backwards for 1s
+        printf("Left BKWD\n");
+		mb_motor_set(RIGHT_MOTOR, 0.0);
+		mb_motor_set(LEFT_MOTOR, -0.8);
+		rc_nanosleep(1E9);
+		//run right backwards for 1s
+        printf("Right BKWD\n");
+		mb_motor_set(RIGHT_MOTOR, -0.8);
+		mb_motor_set(LEFT_MOTOR, 0.0);
+		rc_nanosleep(1E9);
+		//set both forwards for 1s
+#ifdef MRC_VERSION_2v1
+		mb_motor_brake(0);
+#endif
+        printf("Both FWD\n");
+		mb_motor_set_all(0.8);
+		rc_nanosleep(1E9);
+		//stop motors for 1s
+		mb_motor_disable();
+		rc_nanosleep(1E9);
+	}
     rc_led_set(RC_LED_RED, LED_OFF);
 
 	// Keep looping until state changes to EXITING
