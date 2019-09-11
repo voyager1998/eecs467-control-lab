@@ -8,3 +8,6 @@
 
 # vscode config files
 .vscode
+
+# Clion config files
+a1_code/.idea/*
