@@ -40,11 +40,18 @@ int main() {
     // start printf_thread if running from a terminal
     // if it was started as a background process then don't bother
     //if(isatty(fileno(stdout))){
+#ifdef TASK_3
     printf("starting print thread... \n");
     pthread_t printf_thread;
     rc_pthread_create(&printf_thread, printf_loop, (void *)NULL, SCHED_OTHER, 0);
     rc_nanosleep(1E5);
-    //}
+#else
+    printf("starting print thread... \n");
+    pthread_t printf_thread;
+    rc_pthread_create(&printf_thread, printf_debug, (void *)NULL, SCHED_OTHER, 0);
+    rc_nanosleep(1E5);
+#endif
+   //}
 
     // TODO: start motion capture message receive thread
 
@@ -88,41 +95,6 @@ int main() {
     printf("we are running!!!\n");
     // done initializing so set state to RUNNING
     rc_set_state(RUNNING);
-    if (rc_get_state() == RUNNING) {
-#ifdef MRC_VERSION_2v1
-        mb_motor_brake(1);
-#endif
-        //run right forward for 1s
-        printf("Right FWD\n");
-        mb_motor_set(RIGHT_MOTOR, 0.8);
-        mb_motor_set(LEFT_MOTOR, 0.0);
-        rc_nanosleep(1E9);
-        //run left forward for 1s
-        printf("Left FWD\n");
-        mb_motor_set(RIGHT_MOTOR, 0.0);
-        mb_motor_set(LEFT_MOTOR, 0.8);
-        rc_nanosleep(1E9);
-        //run left backwards for 1s
-        printf("Left BKWD\n");
-        mb_motor_set(RIGHT_MOTOR, 0.0);
-        mb_motor_set(LEFT_MOTOR, -0.8);
-        rc_nanosleep(1E9);
-        //run right backwards for 1s
-        printf("Right BKWD\n");
-        mb_motor_set(RIGHT_MOTOR, -0.8);
-        mb_motor_set(LEFT_MOTOR, 0.0);
-        rc_nanosleep(1E9);
-        //set both forwards for 1s
-#ifdef MRC_VERSION_2v1
-        mb_motor_brake(0);
-#endif
-        printf("Both FWD\n");
-        mb_motor_set_all(0.8);
-        rc_nanosleep(1E9);
-        //stop motors for 1s
-        mb_motor_disable();
-        rc_nanosleep(1E9);
-    }
     rc_led_set(RC_LED_RED, LED_OFF);
 
     // Keep looping until state changes to EXITING
@@ -184,6 +156,13 @@ void publish_mb_msgs() {
     mbot_encoder_t encoder_msg;
     odometry_t odo_msg;
 
+    /************************************************/
+    // TODO: Add LCM commands for setpoints here!
+    mbot_motor_command_t motor_setpoints_msg;
+    motor_setpoints_msg.angular_v = 0;
+    motor_setpoints_msg.trans_v = 0.1;
+    /************************************************/
+
     imu_msg.utime = now;
     imu_msg.temp = mb_state.temp;
     int i;
@@ -208,6 +187,9 @@ void publish_mb_msgs() {
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
+
+    // publish setpoints to LCM
+    mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
 }
 
 /*******************************************************************************
@@ -319,7 +301,7 @@ void *setpoint_control_loop(void *ptr) {
 
     while (1) {
         if (rc_dsm_is_new_data()) {
-            // TODO: Handle the DSM data from the Spektrum radio reciever
+            // TODO: Handle the DSM data from the Spektrum radio receiver
             // You may also implement switching between manual and autonomous mode
             // using channel 5 of the DSM data.
 
@@ -374,6 +356,52 @@ void *lcm_subscribe_loop(void *data) {
     }
     lcm_destroy(lcm);
     return 0;
+}
+
+void *printf_debug(void *ptr) {
+    rc_state_t last_state, new_state;  // keep track of last state
+    while (rc_get_state() != EXITING) {
+        new_state = rc_get_state();
+        // check if this is the first time since being paused
+        if (new_state == RUNNING && last_state != RUNNING) {
+            printf("\nRUNNING...\n");
+            // printf("           SENSORS           |           ODOMETRY          |     SETPOINTS     |");
+            printf("SENSORS | ODOMETRY |");
+            printf("\n");
+            // printf("  IMU θ  |");
+            printf("  X_DOT  |");
+            // printf("  θ_DOT  |");
+            printf("    X    |");
+            // printf("    Y    |");
+            // printf("    θ    |");
+            // printf("   FWD   |");
+            // printf("   TURN  |");
+
+            printf("\n");
+        } else if (new_state == PAUSED && last_state != PAUSED) {
+            printf("\nPAUSED\n");
+        }
+        last_state = new_state;
+
+        if (new_state == RUNNING) {
+            printf("\r");
+            //Add Print statements here, do not follow with /n
+            // printf("%7.3f  |", mb_state.tb_angles[2]);
+            printf("%7.3f  |", mb_state.fwd_velocity);
+            // printf("%7.3f  |", mb_state.turn_velocity);
+            printf("%7.3f  |", mb_odometry.x);
+            // printf("%7.3f  |", mb_odometry.y);
+            // printf("%7.3f  |", mb_odometry.theta);
+            // printf("%7.3f  |", mb_setpoints.fwd_velocity);
+            // printf("%7.3f  |", mb_setpoints.turn_velocity);
+            
+            printf("\n");
+
+            // fflush(stdout);
+        }
+        rc_nanosleep(1E9 / PRINTF_HZ);
+    }
+    return NULL;
 }
 
 /*******************************************************************************
