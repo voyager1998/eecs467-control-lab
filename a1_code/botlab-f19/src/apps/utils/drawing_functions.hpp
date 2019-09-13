@@ -13,7 +13,6 @@ class lidar_t;
 class robot_path_t;
 struct frontier_t;
 
-
 /**
 * draw_robot draws the robot as an isoceles triangle. The center of the triangle is located at the robot's current
 * position and the triangle points in the orientation of the robot's heading.
@@ -105,11 +104,9 @@ void draw_distance_grid(const ObstacleDistanceGrid& grid, float cspaceDistance, 
 * \param    color               Color to draw the frontiers
 * \param    buffer              Buffer to add the frontiers to
 */
-void draw_frontiers(const std::vector<frontier_t>& frontiers, 
-                    double metersPerCell, 
-                    const float* color, 
+void draw_frontiers(const std::vector<frontier_t>& frontiers,
+                    double metersPerCell,
+                    const float* color,
                     vx_buffer_t* buffer);
 
-
-
-#endif // APPS_UTILS_DRAWING_FUNCTIONS_HPP
+#endif  // APPS_UTILS_DRAWING_FUNCTIONS_HPP
