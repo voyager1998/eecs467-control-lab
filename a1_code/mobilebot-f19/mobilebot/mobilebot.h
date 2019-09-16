@@ -1,13 +1,13 @@
 #ifndef MB_H
 #define MB_H
 
-#include <math.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <sys/types.h>
-#include <time.h>
 #include <unistd.h>
+#include <math.h>
+#include <time.h>
 
 #include <rc/adc.h>
 #include <rc/button.h>
@@ -28,20 +28,20 @@
 #include <rc/version.h>
 
 #include <lcm/lcm.h>
+#include "../lcmtypes/pose_xyt_t.h"
 #include "../lcmtypes/mbot_encoder_t.h"
 #include "../lcmtypes/mbot_imu_t.h"
 #include "../lcmtypes/mbot_motor_command_t.h"
 #include "../lcmtypes/odometry_t.h"
 #include "../lcmtypes/oled_message_t.h"
-#include "../lcmtypes/pose_xyt_t.h"
-#include "../lcmtypes/reset_odometry_t.h"
 #include "../lcmtypes/timestamp_t.h"
+#include "../lcmtypes/reset_odometry_t.h"
 
-#include "../common/mb_controller.h"
 #include "../common/mb_defs.h"
-#include "../common/mb_motor.h"
-#include "../common/mb_odometry.h"
 #include "../common/mb_structs.h"
+#include "../common/mb_controller.h"
+#include "../common/mb_odometry.h"
+#include "../common/mb_motor.h"
 
 // global variables
 lcm_t* lcm;
