@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt 
 
-f = open("../log/data-new.txt","r")
+f = open("mobilebot-f19/pid_data/pidsmooth_0.4_20_0.txt","r")
 lines = f.readlines()
 # count = 1
 datas = []
@@ -12,6 +12,6 @@ for line in lines:
         datas.append(data[0])
         # plt.plot(count, data[1])
         # count += 1
-print(datas)
+# print(datas)
 plt.plot(datas)
 plt.show()
