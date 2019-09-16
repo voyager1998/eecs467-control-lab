@@ -6,6 +6,8 @@
 *******************************************************************************/
 #include "mobilebot.h"
 
+#define TASK_3
+
 /*******************************************************************************
 * int main() 
 *
@@ -40,7 +42,7 @@ int main() {
     // start printf_thread if running from a terminal
     // if it was started as a background process then don't bother
     //if(isatty(fileno(stdout))){
-#ifdef TASK_3
+#ifndef TASK_3
     printf("starting print thread... \n");
     pthread_t printf_thread;
     rc_pthread_create(&printf_thread, printf_loop, (void *)NULL, SCHED_OTHER, 0);
@@ -51,7 +53,7 @@ int main() {
     rc_pthread_create(&printf_thread, printf_debug, (void *)NULL, SCHED_OTHER, 0);
     rc_nanosleep(1E5);
 #endif
-   //}
+    //}
 
     // TODO: start motion capture message receive thread
 
@@ -160,7 +162,7 @@ void publish_mb_msgs() {
     // TODO: Add LCM commands for setpoints here!
     mbot_motor_command_t motor_setpoints_msg;
     motor_setpoints_msg.angular_v = 0;
-    motor_setpoints_msg.trans_v = 0.1;
+    motor_setpoints_msg.trans_v = 0.7;
     /************************************************/
 
     imu_msg.utime = now;
@@ -394,7 +396,9 @@ void *printf_debug(void *ptr) {
             // printf("%7.3f  |", mb_odometry.theta);
             // printf("%7.3f  |", mb_setpoints.fwd_velocity);
             // printf("%7.3f  |", mb_setpoints.turn_velocity);
-            
+            printf("%7.3f  |", mb_state.left_velocity);
+            printf("%7.3f  ", mb_state.right_velocity);
+
             printf("\n");
 
             // fflush(stdout);

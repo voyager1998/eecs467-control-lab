@@ -56,10 +56,10 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state) {
 
     // In addition, we calculate the velocities states here.
     // TODO(EECS467): calculate velocities properly
-    mb_state->turn_velocity = dtheta;
-    mb_state->fwd_velocity = ds;
-    mb_state->left_velocity = ds - 0.21 * dtheta / 2;
-    mb_state->right_velocity = ds + 0.21 * dtheta / 2;
+    mb_state->turn_velocity = dtheta / DT;
+    mb_state->fwd_velocity = ds / DT;
+    mb_state->left_velocity = mb_state->fwd_velocity - 0.21 * mb_state->turn_velocity / 2;
+    mb_state->right_velocity = mb_state->fwd_velocity + 0.21 * mb_state->turn_velocity / 2;
 }
 
 /*******************************************************************************

@@ -41,8 +41,8 @@
 
 #define SAMPLE_RATE_HZ 20       // main filter and control loop speed
 #define DT 0.05                 // 1/sample_rate
-#define PRINTF_HZ 10            // rate of print loop
-#define RC_CTL_HZ 25            // rate of RC data update
+#define PRINTF_HZ 20            // rate of print loop
+#define RC_CTL_HZ 20            // rate of RC data update
 #define LCM_HZ 100              // rate of LCM subscribe
 #define LCM_PRIORITY 60         // priority of LCM thread (lower is less critical)
 #define SETPOINT_PRIORITY 30    // priority of setpoint thread (lower is less critical)
