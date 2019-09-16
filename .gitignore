@@ -11,3 +11,6 @@
 
 # Clion config files
 a1_code/.idea/*
+
+# but not these files...
+!lcm-logfile*
