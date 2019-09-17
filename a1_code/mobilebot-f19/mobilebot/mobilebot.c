@@ -99,6 +99,17 @@ int main() {
     rc_set_state(RUNNING);
     rc_led_set(RC_LED_RED, LED_OFF);
 
+	if(rc_get_state()==RUNNING){
+        mbot_motor_command_t motor_setpoints_msg;
+        motor_setpoints_msg.angular_v = 0;
+        motor_setpoints_msg.trans_v = 0.7;
+        mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+        rc_nanosleep(10E9);
+        motor_setpoints_msg.angular_v = 0;
+        motor_setpoints_msg.trans_v = 0;
+        mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+	}
+
     // Keep looping until state changes to EXITING
     while (rc_get_state() != EXITING) {
         // other functions are handled in other threads
@@ -158,13 +169,6 @@ void publish_mb_msgs() {
     mbot_encoder_t encoder_msg;
     odometry_t odo_msg;
 
-    /************************************************/
-    // TODO: Add LCM commands for setpoints here!
-    mbot_motor_command_t motor_setpoints_msg;
-    motor_setpoints_msg.angular_v = 0;
-    motor_setpoints_msg.trans_v = 0.7;
-    /************************************************/
-
     imu_msg.utime = now;
     imu_msg.temp = mb_state.temp;
     int i;
@@ -189,9 +193,6 @@ void publish_mb_msgs() {
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
-
-    // publish setpoints to LCM
-    mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
 }
 
 /*******************************************************************************
