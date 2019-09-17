@@ -109,4 +109,16 @@ void draw_frontiers(const std::vector<frontier_t>& frontiers,
                     const float* color,
                     vx_buffer_t* buffer);
 
+/**
+ * ZHIHAO RUAN:
+ * draw_turning draws the indicator box required in Task 2.
+ * 
+ * @param    pose        Pose at which to draw the robot
+ * @param    color       Color to draw the robot
+ * @param    buffer      Buffer to add the robot object to
+ */
+void draw_turning(const std::vector<turn_xy_t>& turn,
+                  const float* color,
+                  vx_buffer_t* buffer);
+
 #endif  // APPS_UTILS_DRAWING_FUNCTIONS_HPP

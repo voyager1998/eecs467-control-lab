@@ -5,6 +5,7 @@
 #include <lcmtypes/particles_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
+#include <lcmtypes/turn_xy_t.hpp>
 #include <planning/frontiers.hpp>
 #include <planning/obstacle_distance_grid.hpp>
 #include <slam/occupancy_grid.hpp>
@@ -30,6 +31,14 @@ void draw_robot(const pose_xyt_t& pose, const float* color, vx_buffer_t* buffer)
                                          vxo_mat_rotate_z(pose.theta),
                                          vxo_mat_scale(0.15f),
                                          vxo_robot(vxo_mesh_style(color))));
+}
+
+void draw_turning(const std::vector<turn_xy_t>& turn, const float* color, vx_buffer_t* buffer) {
+    for (auto& turnpoint : turn) {
+        vx_buffer_add_back(buffer, vxo_chain(vxo_mat_translate3(turnpoint.x, turnpoint.y, 0.0),
+                                             vxo_mat_scale(0.5f),
+                                             vxo_box(vxo_lines_style(color, 2.0))));
+    }
 }
 
 void draw_pose_trace(const PoseTrace& poses, const float* color, vx_buffer_t* buffer) {

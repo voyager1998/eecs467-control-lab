@@ -26,6 +26,7 @@ BotGui::BotGui(lcm::LCM* lcmInstance, int argc, char** argv, int widthInPixels, 
       haveLaser_(false),
       havePath_(false),
       haveTruePose_(false),
+      turning_(false),
       shouldResetStateLabels_(false),
       shouldClearTraces_(false),
       nextColorIndex_(0),
@@ -245,6 +246,15 @@ void BotGui::render(void) {
         }
     }
 
+    /**
+     * ZHIHAO RUAN: 
+     * 
+     * Draw active turning boxes
+     */
+    vx_buffer_t* turnBuf = vx_world_get_buffer(world_, "turning");
+    draw_turning(turning_, vx_red, turnBuf);
+    vx_buffer_swap(turnBuf);
+
     // If the SLAM_POSE has been assigned a color, then draw it using that color
     if (traces_.find(SLAM_POSE_CHANNEL) != traces_.end()) {
         draw_robot(slamPose_, traces_[SLAM_POSE_CHANNEL].color, poseBuf);
@@ -313,6 +323,11 @@ void BotGui::handlePath(const lcm::ReceiveBuffer* rbuf, const std::string& chann
     std::lock_guard<std::mutex> autoLock(vxLock_);
     path_ = *path;
     havePath_ = true;
+}
+
+void BotGui::handleTurn(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const turn_xy_t* turn) {
+    std::lock_guard<std::mutex> autoLock(vxLock_);
+    turning_.emplace_back(turn->utime, turn->x, turn->y);
 }
 
 void BotGui::handleExplorationStatus(const lcm::ReceiveBuffer* rbuf,

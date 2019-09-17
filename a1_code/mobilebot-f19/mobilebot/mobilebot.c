@@ -101,6 +101,12 @@ int main() {
 
     // Keep looping until state changes to EXITING
     while (rc_get_state() != EXITING) {
+        if (mb_state.turn_velocity != 0) {
+            turn_xy_t msg;
+            msg.x = mb_odometry.x;
+            msg.y = mb_odometry.y;
+            turn_xy_t_publish(lcm, CONTROLLER_PATH_CHANNEL, &msg);
+        }
         // other functions are handled in other threads
         // there is no need to do anything here but sleep
         led_heartbeat();
@@ -158,13 +164,6 @@ void publish_mb_msgs() {
     mbot_encoder_t encoder_msg;
     odometry_t odo_msg;
 
-    /************************************************/
-    // TODO: Add LCM commands for setpoints here!
-    mbot_motor_command_t motor_setpoints_msg;
-    motor_setpoints_msg.angular_v = 0;
-    motor_setpoints_msg.trans_v = 0.7;
-    /************************************************/
-
     imu_msg.utime = now;
     imu_msg.temp = mb_state.temp;
     int i;
@@ -189,9 +188,6 @@ void publish_mb_msgs() {
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
-
-    // publish setpoints to LCM
-    mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
 }
 
 /*******************************************************************************
