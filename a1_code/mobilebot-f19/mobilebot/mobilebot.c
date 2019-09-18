@@ -6,7 +6,9 @@
 *******************************************************************************/
 #include "mobilebot.h"
 
-#define TASK_3
+// #define TASK_3
+#define TASK_4
+// #define TASK_5
 #define PI 3.14159265358979323846
 
 /*******************************************************************************
@@ -78,8 +80,10 @@ int main() {
     pthread_mutex_init(&state_mutex, NULL);
 
     //attach controller function to IMU interrupt
-    // printf("initializing controller...\n");
-    // mb_initialize_controller();
+// #ifndef TASK_4    
+    printf("initializing controller...\n");
+    mb_initialize_controller();
+// #endif
 
     printf("initializing motors...\n");
     mb_motor_init();
@@ -106,15 +110,17 @@ int main() {
         // there is no need to do anything here but sleep
         led_heartbeat();
         // rc_nanosleep(7E8);
+#ifdef TASK_4
+    mb_destroy_controller();
     for (int turn = 0; turn < 4; turn++){
         if(rc_get_state()==RUNNING){
             mb_load_controller_config();
             mb_initialize_controller();
             mbot_motor_command_t motor_setpoints_msg;
             motor_setpoints_msg.angular_v = 0;
-            motor_setpoints_msg.trans_v = 0.5;
+            motor_setpoints_msg.trans_v = 0.2;
             mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-            rc_nanosleep(2E9);
+            rc_nanosleep(1E9);
             mb_destroy_controller();
 
             mb_load_controller_config();
@@ -130,7 +136,7 @@ int main() {
             motor_setpoints_msg.angular_v = -PI/4;
             motor_setpoints_msg.trans_v = 0;
             mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-            rc_nanosleep(2E9);
+            rc_nanosleep(1E9);
             mb_destroy_controller();
 
             mb_load_controller_config();
@@ -142,6 +148,12 @@ int main() {
             mb_destroy_controller();
         }
     }
+    mb_initialize_controller();
+#endif
+
+#ifdef TASK_5
+
+#endif
     }
     rc_led_set(RC_LED_RED, LED_ON);
     // exit cleanly
