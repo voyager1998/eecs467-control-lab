@@ -26,7 +26,6 @@ BotGui::BotGui(lcm::LCM* lcmInstance, int argc, char** argv, int widthInPixels, 
       haveLaser_(false),
       havePath_(false),
       haveTruePose_(false),
-      turning_(false),
       shouldResetStateLabels_(false),
       shouldClearTraces_(false),
       nextColorIndex_(0),
@@ -327,7 +326,11 @@ void BotGui::handlePath(const lcm::ReceiveBuffer* rbuf, const std::string& chann
 
 void BotGui::handleTurn(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const turn_xy_t* turn) {
     std::lock_guard<std::mutex> autoLock(vxLock_);
-    turning_.emplace_back(turn->utime, turn->x, turn->y);
+    turn_xy_t temp;
+    temp.utime = turn->utime;
+    temp.x = turn->x;
+    temp.y = turn->y;
+    turning_.push_back(temp);
 }
 
 void BotGui::handleExplorationStatus(const lcm::ReceiveBuffer* rbuf,

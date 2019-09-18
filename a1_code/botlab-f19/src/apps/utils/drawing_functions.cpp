@@ -23,6 +23,7 @@
 #include <vx/vxo_mesh.h>
 #include <vx/vxo_points.h>
 #include <vx/vxo_robot.h>
+#include <vx/vxo_rect.h>
 
 void draw_robot(const pose_xyt_t& pose, const float* color, vx_buffer_t* buffer) {
     ////////////////// TODO: Draw robot at the pose using vxo_robot ////////////////////////////
@@ -33,11 +34,12 @@ void draw_robot(const pose_xyt_t& pose, const float* color, vx_buffer_t* buffer)
                                          vxo_robot(vxo_mesh_style(color))));
 }
 
+
 void draw_turning(const std::vector<turn_xy_t>& turn, const float* color, vx_buffer_t* buffer) {
     for (auto& turnpoint : turn) {
         vx_buffer_add_back(buffer, vxo_chain(vxo_mat_translate3(turnpoint.x, turnpoint.y, 0.0),
-                                             vxo_mat_scale(0.5f),
-                                             vxo_box(vxo_lines_style(color, 2.0))));
+                                             vxo_mat_scale(0.15f),
+                                             vxo_rect(vxo_lines_style(color, 2.0))));
     }
 }
 

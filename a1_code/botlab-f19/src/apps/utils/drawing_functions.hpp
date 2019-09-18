@@ -11,6 +11,7 @@ class particles_t;
 class pose_xyt_t;
 class lidar_t;
 class robot_path_t;
+class turn_xy_t;
 struct frontier_t;
 
 /**
