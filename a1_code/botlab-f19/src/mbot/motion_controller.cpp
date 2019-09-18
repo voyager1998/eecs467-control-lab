@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cassert>
 #include <signal.h>
+#include <cmath>
 
 class MotionController
 {
@@ -55,6 +56,17 @@ public:
 
         } else if(state_ == DRIVE) {
             // TODO(EECS467): Implement your feedback controller for driving here.
+            if (sqrt( (targets_[stage].x - cur_pos.x)*(targets_[stage].x - cur_pos.x)
+                    + (targets_[stage].y - cur_pos.y)*(targets_[stage].y - cur_pos.y) ) < 0.05){
+                cmd.trans_v = 0.0f;
+                cmd.angular_v = 0.0f;
+            }
+            else{
+                cmd.trans_v = sqrt(sqrt( (targets_[stage].x - cur_pos.x)*(targets_[stage].x - cur_pos.x)
+                            + (targets_[stage].y - cur_pos.y)*(targets_[stage].y - cur_pos.y) ));
+                cmd.angular_v = 0.0f;
+            }
+
         } else {
             std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
         }
@@ -91,6 +103,10 @@ public:
     void handleOdometry(const lcm::ReceiveBuffer* buf, const std::string& channel, const odometry_t* odometry)
     {
         // TODO(EECS467) Implement your handler for new odometry data
+        cur_pos.x = odometry->x;
+        cur_pos.y = odometry->y;
+        cur_pos.theta = odometry->theta;
+
     }
     
     void handlePose(const lcm::ReceiveBuffer* buf, const std::string& channel, const pose_xyt_t* pose)
@@ -107,10 +123,14 @@ private:
     };
     
     std::vector<pose_xyt_t> targets_;
+
     // TODO(EECS467) Initialize the state.
-    State state_;
+    State state_ = State::DRIVE;
+
     // TODO(EECS467) Add additional variables for the feedback
     // controllers here.
+    int stage = 0; //if the robot is driving to targets_[stage]
+    pose_xyt_t cur_pos;
 
     int64_t time_offset;
     bool timesync_initialized_;
