@@ -102,6 +102,12 @@ int main() {
 
     // Keep looping until state changes to EXITING
     while (rc_get_state() != EXITING) {
+        if (mb_state.turn_velocity != 0) {
+            turn_xy_t msg;
+            msg.x = mb_odometry.x;
+            msg.y = mb_odometry.y;
+            turn_xy_t_publish(lcm, CONTROLLER_PATH_CHANNEL, &msg);
+        }
         // other functions are handled in other threads
         // there is no need to do anything here but sleep
         led_heartbeat();

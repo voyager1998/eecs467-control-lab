@@ -13,6 +13,7 @@
 #include <lcmtypes/odometry_t.hpp>
 #include <lcmtypes/particles_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
+#include <lcmtypes/turn_xy_t.hpp>
 #include <map>
 #include <mutex>
 #include <planning/frontiers.hpp>
@@ -63,6 +64,7 @@ public:
     void handleOdometry(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const odometry_t* odom);
     void handleLaser(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const lidar_t* laser);
     void handlePath(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const robot_path_t* path);
+    void handleTurn(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const turn_xy_t* turn);
     void handleExplorationStatus(const lcm::ReceiveBuffer* rbuf,
                                  const std::string& channel,
                                  const exploration_status_t* status);
@@ -93,6 +95,9 @@ private:
     bool havePath_;
     bool haveTruePose_;
     pose_xyt_t initialTruePose_;
+
+    // >>> ZHIHAO RUAN: self-defined variable starts here!
+    std::vector<turn_xy_t> turning_;
 
     // Widgets w/variable input/output
     GtkWidget* showMapCheck_;                         // Checkbox indicating if the map should be drawn
