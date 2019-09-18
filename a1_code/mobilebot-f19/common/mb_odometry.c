@@ -58,8 +58,10 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state) {
     // TODO(EECS467): calculate velocities properly
     mb_state->turn_velocity = dtheta / DT;
     mb_state->fwd_velocity = ds / DT;
-    mb_state->left_velocity = mb_state->fwd_velocity - 0.21 * mb_state->turn_velocity / 2;
-    mb_state->right_velocity = mb_state->fwd_velocity + 0.21 * mb_state->turn_velocity / 2;
+    // mb_state->left_velocity = mb_state->fwd_velocity - 0.21 * mb_state->turn_velocity / 2;
+    // mb_state->right_velocity = mb_state->fwd_velocity + 0.21 * mb_state->turn_velocity / 2;
+    mb_state->left_velocity = mb_state->left_encoder * (2 * PI * 0.04 / (48 * 34.014));
+    mb_state->right_velocity = mb_state->right_encoder * (2 * PI * 0.04 / (48 * 34.014));
 }
 
 /*******************************************************************************
