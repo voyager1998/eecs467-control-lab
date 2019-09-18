@@ -7,6 +7,7 @@
 #include "mobilebot.h"
 
 #define TASK_3
+#define PI 3.14159265358979323846
 
 /*******************************************************************************
 * int main() 
@@ -77,8 +78,8 @@ int main() {
     pthread_mutex_init(&state_mutex, NULL);
 
     //attach controller function to IMU interrupt
-    printf("initializing controller...\n");
-    mb_initialize_controller();
+    // printf("initializing controller...\n");
+    // mb_initialize_controller();
 
     printf("initializing motors...\n");
     mb_motor_init();
@@ -99,23 +100,48 @@ int main() {
     rc_set_state(RUNNING);
     rc_led_set(RC_LED_RED, LED_OFF);
 
-	if(rc_get_state()==RUNNING){
-        mbot_motor_command_t motor_setpoints_msg;
-        motor_setpoints_msg.angular_v = 0;
-        motor_setpoints_msg.trans_v = 0.7;
-        mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-        rc_nanosleep(10E9);
-        motor_setpoints_msg.angular_v = 0;
-        motor_setpoints_msg.trans_v = 0;
-        mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-	}
-
     // Keep looping until state changes to EXITING
     while (rc_get_state() != EXITING) {
         // other functions are handled in other threads
         // there is no need to do anything here but sleep
         led_heartbeat();
-        rc_nanosleep(7E8);
+        // rc_nanosleep(7E8);
+    for (int turn = 0; turn < 4; turn++){
+        if(rc_get_state()==RUNNING){
+            mb_load_controller_config();
+            mb_initialize_controller();
+            mbot_motor_command_t motor_setpoints_msg;
+            motor_setpoints_msg.angular_v = 0;
+            motor_setpoints_msg.trans_v = 0.5;
+            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+            rc_nanosleep(2E9);
+            mb_destroy_controller();
+
+            mb_load_controller_config();
+            mb_initialize_controller();
+            motor_setpoints_msg.angular_v = 0;
+            motor_setpoints_msg.trans_v = 0;
+            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+            rc_nanosleep(2E9);
+            mb_destroy_controller();
+
+            mb_load_controller_config();
+            mb_initialize_controller();
+            motor_setpoints_msg.angular_v = -PI/4;
+            motor_setpoints_msg.trans_v = 0;
+            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+            rc_nanosleep(2E9);
+            mb_destroy_controller();
+
+            mb_load_controller_config();
+            mb_initialize_controller();
+            motor_setpoints_msg.angular_v = 0;
+            motor_setpoints_msg.trans_v = 0;
+            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+            rc_nanosleep(2E9);
+            mb_destroy_controller();
+        }
+    }
     }
     rc_led_set(RC_LED_RED, LED_ON);
     // exit cleanly
