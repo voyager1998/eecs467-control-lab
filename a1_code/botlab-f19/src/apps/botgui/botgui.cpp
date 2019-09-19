@@ -186,6 +186,7 @@ void BotGui::onDisplayStart(vx_display_t* display) {
     lcmInstance_->subscribe(".*_POSE", &BotGui::handlePose, this);         // NOTE: Subscribe to ALL _POSE channels!
     lcmInstance_->subscribe(".*ODOMETRY", &BotGui::handleOdometry, this);  // NOTE: Subscribe to all channels with odometry in the name
     lcmInstance_->subscribe(EXPLORATION_STATUS_CHANNEL, &BotGui::handleExplorationStatus, this);
+    lcmInstance_->subscribe(MBOT_TURN_CHANNEL, &BotGui::handleTurn, this);
 }
 
 void BotGui::render(void) {
@@ -324,6 +325,11 @@ void BotGui::handlePath(const lcm::ReceiveBuffer* rbuf, const std::string& chann
     havePath_ = true;
 }
 
+/**
+ * ZHIHAO RUAN:
+ * 
+ * Handle lcm message: turn_xy_t
+ */
 void BotGui::handleTurn(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const turn_xy_t* turn) {
     std::lock_guard<std::mutex> autoLock(vxLock_);
     turn_xy_t temp;
@@ -331,6 +337,9 @@ void BotGui::handleTurn(const lcm::ReceiveBuffer* rbuf, const std::string& chann
     temp.x = turn->x;
     temp.y = turn->y;
     turning_.push_back(temp);
+
+    std::cout << "Turn message received at: " << turn->x << ", " << turn->y << std::endl;
+
 }
 
 void BotGui::handleExplorationStatus(const lcm::ReceiveBuffer* rbuf,

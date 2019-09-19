@@ -80,10 +80,8 @@ int main() {
     pthread_mutex_init(&state_mutex, NULL);
 
     //attach controller function to IMU interrupt
-// #ifndef TASK_4    
     printf("initializing controller...\n");
     mb_initialize_controller();
-// #endif
 
     printf("initializing motors...\n");
     mb_motor_init();
@@ -106,55 +104,49 @@ int main() {
 
     // Keep looping until state changes to EXITING
     while (rc_get_state() != EXITING) {
-        if (mb_state.turn_velocity != 0) {
-            turn_xy_t msg;
-            msg.x = mb_odometry.x;
-            msg.y = mb_odometry.y;
-            turn_xy_t_publish(lcm, CONTROLLER_PATH_CHANNEL, &msg);
-        }
         // other functions are handled in other threads
         // there is no need to do anything here but sleep
         led_heartbeat();
         // rc_nanosleep(7E8);
 #ifdef TASK_4
-    mb_destroy_controller();
-    for (int turn = 0; turn < 4; turn++){
-        if(rc_get_state()==RUNNING){
-            mb_load_controller_config();
-            mb_initialize_controller();
-            mbot_motor_command_t motor_setpoints_msg;
-            motor_setpoints_msg.angular_v = 0;
-            motor_setpoints_msg.trans_v = 0.2;
-            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-            rc_nanosleep(1E9);
-            mb_destroy_controller();
+        mb_destroy_controller();
+        for (int turn = 0; turn < 4; turn++) {
+            if (rc_get_state() == RUNNING) {
+                mb_load_controller_config();
+                mb_initialize_controller();
+                mbot_motor_command_t motor_setpoints_msg;
+                motor_setpoints_msg.angular_v = 0;
+                motor_setpoints_msg.trans_v = 0.2;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(1E9);
+                mb_destroy_controller();
 
-            mb_load_controller_config();
-            mb_initialize_controller();
-            motor_setpoints_msg.angular_v = 0;
-            motor_setpoints_msg.trans_v = 0;
-            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-            rc_nanosleep(2E9);
-            mb_destroy_controller();
+                mb_load_controller_config();
+                mb_initialize_controller();
+                motor_setpoints_msg.angular_v = 0;
+                motor_setpoints_msg.trans_v = 0;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(2E9);
+                mb_destroy_controller();
 
-            mb_load_controller_config();
-            mb_initialize_controller();
-            motor_setpoints_msg.angular_v = -PI/4;
-            motor_setpoints_msg.trans_v = 0;
-            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-            rc_nanosleep(1E9);
-            mb_destroy_controller();
+                mb_load_controller_config();
+                mb_initialize_controller();
+                motor_setpoints_msg.angular_v = -PI / 4;
+                motor_setpoints_msg.trans_v = 0;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(1E9);
+                mb_destroy_controller();
 
-            mb_load_controller_config();
-            mb_initialize_controller();
-            motor_setpoints_msg.angular_v = 0;
-            motor_setpoints_msg.trans_v = 0;
-            mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-            rc_nanosleep(2E9);
-            mb_destroy_controller();
+                mb_load_controller_config();
+                mb_initialize_controller();
+                motor_setpoints_msg.angular_v = 0;
+                motor_setpoints_msg.trans_v = 0;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(2E9);
+                mb_destroy_controller();
+            }
         }
-    }
-    mb_initialize_controller();
+        mb_initialize_controller();
 #endif
 
 #ifdef TASK_5
@@ -212,6 +204,7 @@ void publish_mb_msgs() {
     mbot_imu_t imu_msg;
     mbot_encoder_t encoder_msg;
     odometry_t odo_msg;
+    turn_xy_t turn_msg;
 
     imu_msg.utime = now;
     imu_msg.temp = mb_state.temp;
@@ -237,6 +230,11 @@ void publish_mb_msgs() {
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
+    if (mb_state.turn_velocity > 0.18 || mb_state.turn_velocity < -0.18) {
+        turn_msg.x = mb_odometry.x;
+        turn_msg.y = mb_odometry.y;
+        turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
+    }
 }
 
 /*******************************************************************************

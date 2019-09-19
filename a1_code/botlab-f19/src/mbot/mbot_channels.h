@@ -20,4 +20,8 @@
 #define MBOT_TIMESYNC_CHANNEL "MBOT_TIMESYNC"
 #define MESSAGE_CONFIRMATION_CHANNEL "MSG_CONFIRM"
 
+/************* ZHIHAO RUAN *************/
+// used for turning indication
+#define MBOT_TURN_CHANNEL "MBOT_TURNING"
+
 #endif // MBOT_CHANNELS_H
