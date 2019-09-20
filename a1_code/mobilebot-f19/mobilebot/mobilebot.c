@@ -315,6 +315,7 @@ void timesync_handler(const lcm_recv_buf_t *rbuf, const char *channel,
 *******************************************************************************/
 void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
                            const mbot_motor_command_t *msg, void *user) {
+    // printf("%f %f", msg->trans_v, msg->angular_v);
     mb_setpoints.fwd_velocity = msg->trans_v;
     mb_setpoints.turn_velocity = msg->angular_v;
 }
