@@ -23,8 +23,7 @@ public:
     /**
     * Constructor for MotionController.
     */
-    MotionController(lcm::LCM *instance) : lcmInstance(instance),
-                                           stage(0)
+    MotionController(lcm::LCM *instance) : stage(0), lcmInstance(instance)
     {
         time_offset = 0;
         timesync_initialized_ = false;
@@ -64,7 +63,7 @@ public:
             {
                 float dir = atan((targets_[stage].y - cur_pos.y) / (targets_[stage].x - cur_pos.x));
                 printf("Direction is %f\n", dir);
-                if (abs(dir - cur_pos.theta) < 0.01)
+                if (abs(dir - cur_pos.theta) < 0.05)
                 {
                     cmd.trans_v = 0.0f;
                     cmd.angular_v = 0.0f;
@@ -73,7 +72,7 @@ public:
                 else
                 {
                     cmd.trans_v = 0.0f;
-                    cmd.angular_v = 0.01 * (dir - cur_pos.theta);
+                    cmd.angular_v = (dir - cur_pos.theta);
                 }
             }
         }
@@ -97,7 +96,7 @@ public:
         else if (state_ == TURNPOS)
         {
             printf("I am turning to pose!\n");
-            if (abs(targets_[stage].theta - cur_pos.theta) < 0.01)
+            if (abs(targets_[stage].theta - cur_pos.theta) < 0.05)
             {
                 cmd.trans_v = 0.0f;
                 cmd.angular_v = 0.0f;
@@ -107,7 +106,7 @@ public:
             else
             {
                 cmd.trans_v = 0.0f;
-                cmd.angular_v = 0.1 * (targets_[stage].theta - cur_pos.theta);
+                cmd.angular_v = (targets_[stage].theta - cur_pos.theta);
             }
         }
         else
@@ -132,7 +131,7 @@ public:
     void handlePath(const lcm::ReceiveBuffer *buf, const std::string &channel, const robot_path_t *path)
     {
         targets_ = path->path;
-        std::reverse(targets_.begin(), targets_.end()); // store first at back to allow for easy pop_back()
+        // std::reverse(targets_.begin(), targets_.end()); // store first at back to allow for easy pop_back()
 
         std::cout << "received new path at time: " << path->utime << "\n";
         for (auto pose : targets_)
@@ -209,7 +208,7 @@ int main(int argc, char **argv)
 
     while (true)
     {
-        lcmInstance.handleTimeout(50); // update at 20Hz minimum
+        lcmInstance.handleTimeout(20); // update at 20Hz minimum
         if (controller.timesync_initialized())
         {
             mbot_motor_command_t cmd = controller.updateCommand();
