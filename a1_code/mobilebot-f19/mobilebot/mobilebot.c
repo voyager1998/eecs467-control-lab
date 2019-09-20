@@ -7,7 +7,7 @@
 #include "mobilebot.h"
 
 // #define TASK_3
-#define TASK_4
+// #define TASK_4
 // #define TASK_5
 #define PI 3.14159265358979323846
 
