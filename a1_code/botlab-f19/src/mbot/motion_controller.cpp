@@ -212,7 +212,16 @@ public:
             printf("---------------------------Frame---------------------------\n")
             printf("corner %d angle: %f\n", i, newLidar->thetas[corners[i]]);
         }
-        
+        if (corners.size()>4){
+            printf("too many corners!!\n");
+        }else{
+            for (int i = 0; i< 4;i++){
+                float dist = dist_to_line(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
+                newLidar->thetas[corners[array_wrap(i+1,4)]], newLidar->ranges[corners[array_wrap(i+1,4)]]);
+                printf()
+            }
+        }
+
     }
 
     /**
@@ -225,7 +234,7 @@ public:
     }
 
     int array_wrap(int index, int len){
-        if (index>len){
+        if (index >= len){
             return index-len;
         } else if (index<0){
             return index+len;
@@ -234,8 +243,12 @@ public:
         }
     }
 
-    float dist_to_line(float angle1, float range1, float angle2, float range2){
-        return 0;
+    float dist_to_line(float angle1, float range1, float angle2, float range2) {
+        // a^2+b^2-2*a*b*cos(theta)
+        float theta = fabs(angle1 - angle2);
+        float r3 = sqrt(range1 * range1 + range2 * range2 - 2 * range1 * range2 * cos(theta));
+
+        return (range1 * range2 * sin(theta) / r3);
     }
 
 private:
