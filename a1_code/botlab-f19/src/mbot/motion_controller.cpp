@@ -171,7 +171,7 @@ public:
         for (int i = 0; i < count; i++) {
             int flag = 0;  // 0 for it is local max
             if (i < compare_num) {
-                for (int j = array_wrap(i - compare_num, count); j < count; j++) {
+                for (int j = arrayWrap(i - compare_num, count); j < count; j++) {
                     if (newLidar->ranges[j] > newLidar->ranges[i]) {
                         flag = 1;
                         break;
@@ -186,14 +186,14 @@ public:
                     }
                 }
             } else if (i > count - compare_num) {
-                for (int j = array_wrap(i - compare_num, count); j < count; j++) {
+                for (int j = arrayWrap(i - compare_num, count); j < count; j++) {
                     if (newLidar->ranges[j] > newLidar->ranges[i]) {
                         flag = 1;
                         break;
                     }
                 }
                 if (flag == 0) {
-                    for (int j = 0; j < array_wrap(i + compare_num, count); j++) {
+                    for (int j = 0; j < arrayWrap(i + compare_num, count); j++) {
                         if (newLidar->ranges[j] > newLidar->ranges[i]) {
                             flag = 1;
                             break;
@@ -222,25 +222,25 @@ public:
             return;
         } else {
             for (int i = 0; i < 4; i++) {
-                if (fabs(fmod(newLidar->thetas[corners[array_wrap(i + 1, 4)]] - newLidar->thetas[corners[i]], 2 * M_PI)) < 0.1) {
+                if (fabs(fmod(newLidar->thetas[corners[arrayWrap(i + 1, 4)]] - newLidar->thetas[corners[i]], 2 * M_PI)) < 0.1) {
                     printf("One corner two maxs!!\n");
                     return;
                 }
             }
             for (int i = 0; i < 4; i++) {
-                float dist = dist_to_line(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
-                                          newLidar->thetas[corners[array_wrap(i + 1, 4)]],
-                                          newLidar->ranges[corners[array_wrap(i + 1, 4)]]);
+                float dist = distanceToLine(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
+                                            newLidar->thetas[corners[arrayWrap(i + 1, 4)]],
+                                            newLidar->ranges[corners[arrayWrap(i + 1, 4)]]);
                 dist_to_wall.push_back(dist);
                 printf("Dist %d = %f\n", i, dist);
             }
             for (int i = 0; i < 4; i++) {
-                float ctheta1 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[i]]);
-                float ctheta2 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[array_wrap(i + 1, 4)]]);
-                printf("corner difference: %f, %f\n", ctheta1, ctheta2);
-                if (ctheta1 < 0 && ctheta2 < 0) {
+                float corner_angle1 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[i]]);
+                float corner_angle2 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[arrayWrap(i + 1, 4)]]);
+                printf("corner difference: %f, %f\n", corner_angle1, corner_angle2);
+                if (corner_angle1 < 0 && corner_angle2 < 0) {
                     cur_wf_pos.y = dist_to_wall[i];
-                } else if (ctheta1 < 0 && ctheta2 > 0) {
+                } else if (corner_angle1 < 0 && corner_angle2 > 0) {
                     cur_wf_pos.x = dist_to_wall[i];
                 }
             }
@@ -257,17 +257,26 @@ public:
         return sqrt((target.x - cur_pos.x) * (target.x - cur_pos.x) + (target.y - cur_pos.y) * (target.y - cur_pos.y)) < threshold;
     }
 
-    int array_wrap(int index, int len) {
-        if (index >= len) {
-            return index - len;
-        } else if (index < 0) {
-            return index + len;
-        } else {
-            return index;
-        }
+    /**
+     * Imitate python array indexing
+     * assume index never goes below -len
+     */
+    inline int arrayWrap(int index, int len) {
+        return (index + len) % len;
     }
 
-    float dist_to_line(float angle1, float range1, float angle2, float range2) {
+    /**
+     * ZHIHAO RUAN:
+     * 
+     * Given two points in coordinates, calculate the
+     * distance between the origin and the line passing
+     * through the two points. 
+     * 
+     * First use c^2 = a^2 + b^2 - 2*a*b*cos(theta) to 
+     * get c, then use S = 0.5*a*b*sin(theta) = 0.5*c*dist
+     * to get the expected dist
+     */
+    float distanceToLine(float angle1, float range1, float angle2, float range2) {
         // a^2+b^2-2*a*b*cos(theta)
         float theta = fabs(angle1 - angle2);
         float r3 = sqrt(range1 * range1 + range2 * range2 - 2 * range1 * range2 * cos(theta));
@@ -275,6 +284,11 @@ public:
         return fabs(range1 * range2 * sin(theta) / r3);
     }
 
+    /** 
+     * Wrapper phase between -PI and PI
+     * 
+     * DON'T use fmod() anymore!!!
+     */
     float phaseWrap_PI(float angle) {
         while (angle > PI) {
             angle -= 2 * PI;
