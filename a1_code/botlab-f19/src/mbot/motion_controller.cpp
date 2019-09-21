@@ -23,8 +23,7 @@ public:
     /**
     * Constructor for MotionController.
     */
-    MotionController(lcm::LCM *instance) : lcmInstance(instance),
-                                           stage(0)
+    MotionController(lcm::LCM *instance) : stage(0), lcmInstance(instance)
     {
         time_offset = 0;
         timesync_initialized_ = false;
