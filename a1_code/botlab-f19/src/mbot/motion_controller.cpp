@@ -27,10 +27,9 @@ public:
     * Constructor for MotionController.
     */
     MotionController(lcm::LCM *instance) : state_(State::DRIVE),
-                                           stage(0),
-                                           stoppedtime(0),
                                            wallfollower_k1(0.0),
                                            wallfollower_k2(sqrt(4 * wallfollower_k1)),
+                                           keep_heading(0.0f),
                                            lcmInstance(instance) {
         time_offset = 0;
         timesync_initialized_ = false;
@@ -53,21 +52,21 @@ public:
         cmd.trans_v = 0.0f;
         cmd.angular_v = 0.0f;
         cmd.utime = now();
-        
-        if(targets_.empty()) {
+
+        if (targets_.empty()) {
             return cmd;
         }
 
         pose_xyt_t pose_target = targets_.back();
 
-        if(state_ == TURN) {
+        if (state_ == TURN) {
             cmd.trans_v = 0.0f;
             float diff = 0.0;
-            if (cur_pos.theta - pose_target.theta < -M_PI){
-                diff = pose_target.theta - (cur_pos.theta + 2*M_PI);
-            }else if (cur_pos.theta - pose_target.theta>M_PI){
-                diff = pose_target.theta + 2*M_PI - cur_pos.theta;
-            }else{
+            if (cur_pos.theta - pose_target.theta < -M_PI) {
+                diff = pose_target.theta - (cur_pos.theta + 2 * M_PI);
+            } else if (cur_pos.theta - pose_target.theta > M_PI) {
+                diff = pose_target.theta + 2 * M_PI - cur_pos.theta;
+            } else {
                 diff = pose_target.theta - cur_pos.theta;
             }
 
@@ -76,65 +75,42 @@ public:
                 keep_heading = pose_target.theta;
                 state_ = DRIVE;
                 targets_.pop_back();
-            }
-            else {
-                // float diff = 0.0;
-                // if (cur_pos.theta - pose_target.theta < -M_PI){
-                //     diff = pose_target.theta - (cur_pos.theta + 2*M_PI);
-                // }else if (cur_pos.theta - pose_target.theta>M_PI){
-                //     diff = pose_target.theta + 2*M_PI - cur_pos.theta;
-                // }else{
-                //     diff = pose_target.theta - cur_pos.theta;
-                // }
-                if(diff>0){
-                    cmd.angular_v = -1*(diff + 0.1);
-                }else{
-                    cmd.angular_v = -1*(diff - 0.1);
+            } else {
+                if (diff > 0) {
+                    cmd.angular_v = -1 * (diff + 0.1);
+                } else {
+                    cmd.angular_v = -1 * (diff - 0.1);
                 }
-                // cmd.angular_v = -1 * diff + 0.5;
-                printf("target=%f, cur=%f, diff=%f, ang_v=%f\n", pose_target.theta, cur_pos.theta, fabs(diff), cmd.angular_v);
+                printf("target=%f, cur=%f, diff=%f, ang_v=%f\n",
+                       pose_target.theta, cur_pos.theta, fabs(diff), cmd.angular_v);
             }
-        } else if(state_ == DRIVE) {
+        } else if (state_ == DRIVE) {
             float diff = sqrt(pow(pose_target.x - cur_pos.x, 2) + pow(pose_target.y - cur_pos.y, 2));
-            // printf("Driving, diff: %f\n", diff);
-            // printf("diff: %f; target: (%f, %f, %f); curr: (%f, %f, %f)\n", diff, pose_target.x, pose_target.y, pose_target.theta, cur_pos.x, cur_pos.y, cur_pos.theta);
-            // Reached target
             if (diff < 0.05) {
                 cmd.trans_v = 0.0f;
                 cmd.angular_v = 0.0f;
                 state_ = TURN;
-            }
-            else {
-                // float l1_dist = (pose_target.x - cur_pos.x) + (pose_target.y - cur_pos.y);
-                float debug_trans_v = std::min(1.2*diff + 0.05, 0.1); //0.1f;
+            } else {
+                float debug_trans_v = std::min(1.2 * diff + 0.05, 0.1);  //0.1f;
                 float ang_diff = 0.0;
                 float dir = atan2((pose_target.y - cur_pos.y), (pose_target.x - cur_pos.x));
-                if (cur_pos.theta - dir < -M_PI){
-                    ang_diff = dir - (cur_pos.theta + 2*M_PI);
-                }else if (cur_pos.theta - dir > M_PI){
-                    ang_diff = dir + 2*M_PI - cur_pos.theta;
-                }else{
+                if (cur_pos.theta - dir < -M_PI) {
+                    ang_diff = dir - (cur_pos.theta + 2 * M_PI);
+                } else if (cur_pos.theta - dir > M_PI) {
+                    ang_diff = dir + 2 * M_PI - cur_pos.theta;
+                } else {
                     ang_diff = dir - cur_pos.theta;
                 }
-                // if (cur_pos.theta - keep_heading < -M_PI){
-                //     ang_diff = keep_heading - (cur_pos.theta + 2*M_PI);
-                // }else if (cur_pos.theta - keep_heading > M_PI){
-                //     ang_diff = keep_heading + 2*M_PI - cur_pos.theta;
-                // }else{
-                //     ang_diff = keep_heading - cur_pos.theta;
-                // }
-                // cmd.trans_v = 0.1 * (sqrt(sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) + (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y))));
-                
+
                 cmd.angular_v = -0.5 * ang_diff;
-                // float debug_ang_v = 2 * (cur_pos.theta - keep_heading);
                 cmd.trans_v = debug_trans_v;
-                // cmd.angular_v = debug_ang_v;
-                printf("dir: %f, cur.theta: %f, diff: %f, angle_diff: %f, ang_v: %f\n", dir, cur_pos.theta, diff, (cur_pos.theta - dir), cmd.angular_v);
+                printf("dir: %f, cur.theta: %f, diff: %f, angle_diff: %f, ang_v: %f\n",
+                       dir, cur_pos.theta, diff, (cur_pos.theta - dir), cmd.angular_v);
             }
         } else {
             std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
         }
-        
+
         return cmd;
     }
 
@@ -145,16 +121,10 @@ public:
         time_offset = timesync->utime - utime_now();
     }
 
-    void handlePath(const lcm::ReceiveBuffer *buf, const std::string &channel, const robot_path_t *path)
-    {
-        // pose_xyt_t debug;
-        // debug.x = 1.0f;
-        // debug.y = 0.0f;
-        // debug.theta = M_PI_2;
-        // targets_.push_back(debug);
+    void handlePath(const lcm::ReceiveBuffer *buf, const std::string &channel, const robot_path_t *path) {
         targets_ = path->path;
 
-        std::reverse(targets_.begin(), targets_.end()); // store first at back to allow for easy pop_back()
+        std::reverse(targets_.begin(), targets_.end());  // store first at back to allow for easy pop_back()
 
         std::cout << "received new path at time: " << path->utime << "\n";
         for (auto pose : targets_) {
@@ -199,8 +169,7 @@ public:
     }
 
 private:
-    enum State
-    {
+    enum State {
         TURN,
         DRIVE,
     };
@@ -208,17 +177,20 @@ private:
     std::vector<pose_xyt_t> targets_;
 
     // TODO(EECS467) Initialize the state.
-    State state_ = State::DRIVE;
+    State state_;
 
     // TODO(EECS467) Add additional variables for the feedback
     // controllers here.
-    int stage;  //if the robot is driving to targets_[stage]
     pose_xyt_t cur_pos;
-
-    int stoppedtime;
+    curr_state_t cur_state;
     float wallfollower_k1;
     float wallfollower_k2;
-    curr_state_t cur_state;
+    float keep_heading = 0.0f;  // The heading to keep when driving straight
+
+    int64_t time_offset;
+    bool timesync_initialized_;
+
+    message_received_t confirm;
     lcm::LCM *lcmInstance;
 
     int64_t now() {
