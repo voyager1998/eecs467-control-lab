@@ -37,6 +37,7 @@
 #include "../lcmtypes/timestamp_t.h"
 #include "../lcmtypes/reset_odometry_t.h"
 #include "../lcmtypes/turn_xy_t.h"
+#include "../lcmtypes/curr_state_t.h"
 
 #include "../common/mb_defs.h"
 #include "../common/mb_structs.h"

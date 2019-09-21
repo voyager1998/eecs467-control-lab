@@ -417,6 +417,13 @@ void BotGui::destroyTracesIfRequested(void) {
         traces_.clear();
         shouldClearTraces_ = false;
         haveTruePose_ = false;
+
+        /**
+         * ZHIHAO RUAN: 
+         * 
+         * clear the turning boxes!
+         */
+        turning_.clear();
     }
 }
 

@@ -7,7 +7,7 @@
 #include "mobilebot.h"
 
 // #define TASK_3
-#define TASK_4
+// #define TASK_4
 // #define TASK_5
 #define PI 3.14159265358979323846
 
@@ -205,6 +205,7 @@ void publish_mb_msgs() {
     mbot_encoder_t encoder_msg;
     odometry_t odo_msg;
     turn_xy_t turn_msg;
+    curr_state_t state_msg;
 
     imu_msg.utime = now;
     imu_msg.temp = mb_state.temp;
@@ -226,15 +227,22 @@ void publish_mb_msgs() {
     encoder_msg.leftticks = mb_state.left_encoder_total;
     encoder_msg.rightticks = mb_state.right_encoder_total;
 
+    state_msg.utime = now;
+    state_msg.fwd_velocity = mb_state.fwd_velocity;
+    state_msg.turn_velocity = mb_state.turn_velocity;
+    state_msg.left_velocity = mb_state.left_velocity;
+    state_msg.right_velocity = mb_state.right_velocity;
+
     //publish IMU & Encoder Data to LCM
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
-    if (mb_state.turn_velocity > 0.18 || mb_state.turn_velocity < -0.18) {
+    if (mb_state.turn_velocity > 1 || mb_state.turn_velocity < -1) {
         turn_msg.x = mb_odometry.x;
         turn_msg.y = mb_odometry.y;
         turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
     }
+    curr_state_t_publish(lcm, MBOT_STATE_CHANNEL, &state_msg);
 }
 
 /*******************************************************************************
@@ -315,6 +323,7 @@ void timesync_handler(const lcm_recv_buf_t *rbuf, const char *channel,
 *******************************************************************************/
 void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
                            const mbot_motor_command_t *msg, void *user) {
+    // printf("%f %f", msg->trans_v, msg->angular_v);
     mb_setpoints.fwd_velocity = msg->trans_v;
     mb_setpoints.turn_velocity = msg->angular_v;
 }
