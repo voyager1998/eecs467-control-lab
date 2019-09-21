@@ -18,6 +18,7 @@
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/timestamp_t.hpp>
+#include <lcmtypes/lidar_t.hpp>
 
 #define STOPTIME 100
 #define PI 3.14159265358979323846
@@ -159,6 +160,61 @@ public:
         cur_state.right_velocity = state->right_velocity;
     }
 
+    void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar){
+        int count = newLidar->num_ranges;
+        std::vector<int> corners;
+        int compare_num = 10;
+        for (int i = 0; i < count; i++){
+            int flag = 0; // 0 for it is local max
+            if(i<compare_num){
+                for (int j = array_wrap(i-compare_num, count);j<count;j++){
+                    if (newLidar->ranges[j]>newLidar->ranges[i]){
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag == 0){
+                    for (int j = 0;j<i+compare_num;j++){
+                        if (newLidar->ranges[j]>newLidar->ranges[i]){
+                            flag = 1;
+                            break;
+                        }
+                    }
+                }
+            }else if (i>count-compare_num){
+                for (int j = array_wrap(i-compare_num, count);j<count;j++){
+                    if (newLidar->ranges[j]>newLidar->ranges[i]){
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag == 0){
+                    for (int j = 0;j<array_wrap(i+compare_num, count);j++){
+                        if (newLidar->ranges[j]>newLidar->ranges[i]){
+                            flag = 1;
+                            break;
+                        }
+                    }
+                }
+            }else{
+                for (int j = i-compare_num;j<i+compare_num;j++){
+                    if (newLidar->ranges[j]>newLidar->ranges[i]){
+                        flag = 1;
+                        break;
+                    }
+                }
+            }
+            if (flag == 0){
+                corners.push_back(i);
+            }
+        }
+        for (size_t i = 0; i<corners.size();i++){
+            printf("---------------------------Frame---------------------------\n")
+            printf("corner %d angle: %f\n", i, newLidar->thetas[corners[i]]);
+        }
+        
+    }
+
     /**
      * ZHIHAO RUAN:
      * 
@@ -166,6 +222,20 @@ public:
      */
     bool atTarget(const pose_xyt_t &cur_pos, const pose_xyt_t &target, const float &threshold) {
         return sqrt((target.x - cur_pos.x) * (target.x - cur_pos.x) + (target.y - cur_pos.y) * (target.y - cur_pos.y)) < threshold;
+    }
+
+    int array_wrap(int index, int len){
+        if (index>len){
+            return index-len;
+        } else if (index<0){
+            return index+len;
+        }else{
+            return index;
+        }
+    }
+
+    float dist_to_line(float angle1, float range1, float angle2, float range2){
+        return 0;
     }
 
 private:
@@ -182,6 +252,7 @@ private:
     // TODO(EECS467) Add additional variables for the feedback
     // controllers here.
     pose_xyt_t cur_pos;
+    pose_xyt_t cur_wf_pos;
     curr_state_t cur_state;
     float wallfollower_k1;
     float wallfollower_k2;
@@ -210,6 +281,7 @@ int main(int argc, char **argv) {
     // For instance, instantaneous translational and rotational velocity of the robot, which is necessary
     // for your feedback controller.
     lcmInstance.subscribe(MBOT_STATE_CHANNEL, &MotionController::handleState, &controller);
+    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR, &controller);
 
     signal(SIGINT, exit);
 
