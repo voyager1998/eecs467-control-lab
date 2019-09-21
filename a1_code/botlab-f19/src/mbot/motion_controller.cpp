@@ -12,13 +12,13 @@
 #include <iostream>
 #include <lcm/lcm-cpp.hpp>
 #include <lcmtypes/curr_state_t.hpp>
+#include <lcmtypes/lidar_t.hpp>
 #include <lcmtypes/mbot_motor_command_t.hpp>
 #include <lcmtypes/message_received_t.hpp>
 #include <lcmtypes/odometry_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/timestamp_t.hpp>
-#include <lcmtypes/lidar_t.hpp>
 
 #define STOPTIME 100
 #define PI 3.14159265358979323846
@@ -82,8 +82,10 @@ public:
                 } else {
                     cmd.angular_v = -1 * (diff - 0.1);
                 }
+#ifdef DEBUG
                 printf("target=%f, cur=%f, diff=%f, ang_v=%f\n",
                        pose_target.theta, cur_pos.theta, fabs(diff), cmd.angular_v);
+#endif
             }
         } else if (state_ == DRIVE) {
             float diff = sqrt(pow(pose_target.x - cur_pos.x, 2) + pow(pose_target.y - cur_pos.y, 2));
@@ -105,8 +107,10 @@ public:
 
                 cmd.angular_v = -0.5 * ang_diff;
                 cmd.trans_v = debug_trans_v;
+#ifdef DEBUG
                 printf("dir: %f, cur.theta: %f, diff: %f, angle_diff: %f, ang_v: %f\n",
                        dir, cur_pos.theta, diff, (cur_pos.theta - dir), cmd.angular_v);
+#endif
             }
         } else {
             std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
@@ -160,68 +164,88 @@ public:
         cur_state.right_velocity = state->right_velocity;
     }
 
-    void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar){
+    void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
         int count = newLidar->num_ranges;
         std::vector<int> corners;
-        int compare_num = 10;
-        for (int i = 0; i < count; i++){
-            int flag = 0; // 0 for it is local max
-            if(i<compare_num){
-                for (int j = array_wrap(i-compare_num, count);j<count;j++){
-                    if (newLidar->ranges[j]>newLidar->ranges[i]){
+        int compare_num = 20;
+        for (int i = 0; i < count; i++) {
+            int flag = 0;  // 0 for it is local max
+            if (i < compare_num) {
+                for (int j = array_wrap(i - compare_num, count); j < count; j++) {
+                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
                         flag = 1;
                         break;
                     }
                 }
-                if (flag == 0){
-                    for (int j = 0;j<i+compare_num;j++){
-                        if (newLidar->ranges[j]>newLidar->ranges[i]){
+                if (flag == 0) {
+                    for (int j = 0; j < i + compare_num; j++) {
+                        if (newLidar->ranges[j] > newLidar->ranges[i]) {
                             flag = 1;
                             break;
                         }
                     }
                 }
-            }else if (i>count-compare_num){
-                for (int j = array_wrap(i-compare_num, count);j<count;j++){
-                    if (newLidar->ranges[j]>newLidar->ranges[i]){
+            } else if (i > count - compare_num) {
+                for (int j = array_wrap(i - compare_num, count); j < count; j++) {
+                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
                         flag = 1;
                         break;
                     }
                 }
-                if (flag == 0){
-                    for (int j = 0;j<array_wrap(i+compare_num, count);j++){
-                        if (newLidar->ranges[j]>newLidar->ranges[i]){
+                if (flag == 0) {
+                    for (int j = 0; j < array_wrap(i + compare_num, count); j++) {
+                        if (newLidar->ranges[j] > newLidar->ranges[i]) {
                             flag = 1;
                             break;
                         }
                     }
                 }
-            }else{
-                for (int j = i-compare_num;j<i+compare_num;j++){
-                    if (newLidar->ranges[j]>newLidar->ranges[i]){
+            } else {
+                for (int j = i - compare_num; j < i + compare_num; j++) {
+                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
                         flag = 1;
                         break;
                     }
                 }
             }
-            if (flag == 0){
+            if (flag == 0) {
                 corners.push_back(i);
             }
         }
-        for (size_t i = 0; i<corners.size();i++){
-            printf("---------------------------Frame---------------------------\n")
+        printf("---------------------------Frame---------------------------\n");
+        for (size_t i = 0; i < corners.size(); i++) {
             printf("corner %d angle: %f\n", i, newLidar->thetas[corners[i]]);
         }
-        if (corners.size()>4){
-            printf("too many corners!!\n");
-        }else{
-            for (int i = 0; i< 4;i++){
-                float dist = dist_to_line(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
-                newLidar->thetas[corners[array_wrap(i+1,4)]], newLidar->ranges[corners[array_wrap(i+1,4)]]);
-                printf("Dist %d = %f\n", dist);
+        std::vector<float> dist_to_wall;
+        if (corners.size() > 4 || corners.size() < 4) {
+            printf("Incorrect number of corners!!\n");
+            return;
+        } else {
+            for (int i = 0; i < 4; i++) {
+                if (fabs(fmod(newLidar->thetas[corners[array_wrap(i + 1, 4)]] - newLidar->thetas[corners[i]], 2 * M_PI)) < 0.1) {
+                    printf("One corner two maxs!!\n");
+                    return;
+                }
             }
+            for (int i = 0; i < 4; i++) {
+                float dist = dist_to_line(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
+                                          newLidar->thetas[corners[array_wrap(i + 1, 4)]],
+                                          newLidar->ranges[corners[array_wrap(i + 1, 4)]]);
+                dist_to_wall.push_back(dist);
+                printf("Dist %d = %f\n", i, dist);
+            }
+            for (int i = 0; i < 4; i++) {
+                float ctheta1 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[i]]);
+                float ctheta2 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[array_wrap(i + 1, 4)]]);
+                printf("corner difference: %f, %f\n", ctheta1, ctheta2);
+                if (ctheta1 < 0 && ctheta2 < 0) {
+                    cur_wf_pos.y = dist_to_wall[i];
+                } else if (ctheta1 < 0 && ctheta2 > 0) {
+                    cur_wf_pos.x = dist_to_wall[i];
+                }
+            }
+            printf("world frame pose: %f, %f\n", cur_wf_pos.x, cur_wf_pos.y);
         }
-
     }
 
     /**
@@ -233,12 +257,12 @@ public:
         return sqrt((target.x - cur_pos.x) * (target.x - cur_pos.x) + (target.y - cur_pos.y) * (target.y - cur_pos.y)) < threshold;
     }
 
-    int array_wrap(int index, int len){
-        if (index >= len){
-            return index-len;
-        } else if (index<0){
-            return index+len;
-        }else{
+    int array_wrap(int index, int len) {
+        if (index >= len) {
+            return index - len;
+        } else if (index < 0) {
+            return index + len;
+        } else {
             return index;
         }
     }
@@ -248,7 +272,17 @@ public:
         float theta = fabs(angle1 - angle2);
         float r3 = sqrt(range1 * range1 + range2 * range2 - 2 * range1 * range2 * cos(theta));
 
-        return (range1 * range2 * sin(theta) / r3);
+        return fabs(range1 * range2 * sin(theta) / r3);
+    }
+
+    float phaseWrap_PI(float angle) {
+        while (angle > PI) {
+            angle -= 2 * PI;
+        }
+        while (angle < -PI) {
+            angle += 2 * PI;
+        }
+        return angle;
     }
 
 private:

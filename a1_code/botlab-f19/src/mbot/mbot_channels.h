@@ -24,5 +24,6 @@
 // used for turning indication
 #define MBOT_TURN_CHANNEL "MBOT_TURNING"
 #define MBOT_STATE_CHANNEL "CURRENT_STATE"
+#define LIDAR_POSE_CHANNEL "WORLD_POSE"
 
 #endif // MBOT_CHANNELS_H
