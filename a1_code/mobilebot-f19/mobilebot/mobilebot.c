@@ -205,6 +205,7 @@ void publish_mb_msgs() {
     mbot_encoder_t encoder_msg;
     odometry_t odo_msg;
     turn_xy_t turn_msg;
+    curr_state_t state_msg;
 
     imu_msg.utime = now;
     imu_msg.temp = mb_state.temp;
@@ -226,6 +227,12 @@ void publish_mb_msgs() {
     encoder_msg.leftticks = mb_state.left_encoder_total;
     encoder_msg.rightticks = mb_state.right_encoder_total;
 
+    state_msg.utime = now;
+    state_msg.fwd_velocity = mb_state.fwd_velocity;
+    state_msg.turn_velocity = mb_state.turn_velocity;
+    state_msg.left_velocity = mb_state.left_velocity;
+    state_msg.right_velocity = mb_state.right_velocity;
+
     //publish IMU & Encoder Data to LCM
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
@@ -235,6 +242,7 @@ void publish_mb_msgs() {
         turn_msg.y = mb_odometry.y;
         turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
     }
+    curr_state_t_publish(lcm, MBOT_STATE_CHANNEL, &state_msg);
 }
 
 /*******************************************************************************

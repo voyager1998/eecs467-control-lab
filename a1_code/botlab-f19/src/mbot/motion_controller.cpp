@@ -11,6 +11,7 @@
 #include <common/pose_trace.hpp>
 #include <iostream>
 #include <lcm/lcm-cpp.hpp>
+#include <lcmtypes/curr_state_t.hpp>
 #include <lcmtypes/mbot_motor_command_t.hpp>
 #include <lcmtypes/message_received_t.hpp>
 #include <lcmtypes/odometry_t.hpp>
@@ -25,7 +26,12 @@ public:
     /**
     * Constructor for MotionController.
     */
-    MotionController(lcm::LCM *instance) : state_(State::TURNDIR), stage(0), stoppedtime(0), lcmInstance(instance) {
+    MotionController(lcm::LCM *instance) : state_(State::DRIVE),
+                                           stage(0),
+                                           stoppedtime(0),
+                                           wallfollower_k1(0.0),
+                                           wallfollower_k2(sqrt(4 * wallfollower_k1)),
+                                           lcmInstance(instance) {
         time_offset = 0;
         timesync_initialized_ = false;
 
@@ -51,75 +57,37 @@ public:
         if (targets_.empty())
             return cmd;
 
-        if (state_ == State::TURNDIR) {
-            printf("I am turning towards next target!\n");
-            if (sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) +
-                     (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y)) < 0.05) {
-                next_state = State::TURNPOS;
-                state_ = State::STOP;
+        if (state_ == State::DRIVE) {
+            if (atTarget(cur_pos, targets_[stage], 0.08)) {
                 cmd.trans_v = 0.0f;
                 cmd.angular_v = 0.0f;
+                state_ = State::STOP;
             } else {
-                float dir;
-                if (targets_[stage].x > cur_pos.x) {
-                    dir = atan((targets_[stage].y - cur_pos.y) / (targets_[stage].x - cur_pos.x));
-                } else {
-                    dir = atan((targets_[stage].y - cur_pos.y) / (targets_[stage].x - cur_pos.x));
-                    if (dir > 0) {
-                        dir -= PI;
-                    } else {
-                        dir += PI;
-                    }
-                }
-                printf("Direction is %f\n", dir);
-                if (abs(dir - cur_pos.theta) < 0.05) {
-                    cmd.trans_v = 0.0f;
-                    cmd.angular_v = 0.0f;
-                    next_state = State::DRIVE;
-                    state_ = State::STOP;
-                } else {
-                    cmd.trans_v = 0.0f;
-                    cmd.angular_v = 0.1 * (dir - cur_pos.theta);
-                }
+                /**
+                 * ZHIHAO RUAN:
+                 * 
+                 * Wall follower:
+                 * e = y - y_set
+                 * v = v0                                   (v0 for cur_state.fwd_velocity)
+                 * omega = -k1 * theta - k2 / v0 * e
+                 */
+                float error = cur_pos.y - targets_[stage].y;
+                cmd.trans_v = cur_state.fwd_velocity;
+                cmd.angular_v = -wallfollower_k1 * cur_pos.theta - wallfollower_k2 * error * 1.0 / cur_state.fwd_velocity;
             }
-        } else if (state_ == State::DRIVE) {
-            printf("I am driving to the next target!\n");
-            if (sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) + (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y)) < 0.2) {
+        } else if (state_ == State::TURN) {
+            if (fabs(targets_[stage].theta - cur_pos.theta) < 0.01) {
                 cmd.trans_v = 0.0f;
                 cmd.angular_v = 0.0f;
-                // stage++;
-                next_state = State::TURNPOS;
                 state_ = State::STOP;
-                cmd.trans_v = 0.0f;
-                cmd.angular_v = 0.0f;
-            } else {
-                cmd.trans_v = 0.02 * (sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) + (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y)));
-                float dir;
-                if (targets_[stage].x > cur_pos.x) {
-                    dir = atan((targets_[stage].y - cur_pos.y) / (targets_[stage].x - cur_pos.x));
-                } else {
-                    dir = atan((targets_[stage].y - cur_pos.y) / (targets_[stage].x - cur_pos.x));
-                    if (dir > 0) {
-                        dir -= PI;
-                    } else {
-                        dir += PI;
-                    }
-                }
-                cmd.angular_v = 0.1 * (dir - cur_pos.theta);
             }
-        } else if (state_ == State::TURNPOS) {
-            printf("I am turning to pose!\n");
-            if (abs(targets_[stage].theta - cur_pos.theta) < 0.05) {
-                cmd.trans_v = 0.0f;
-                cmd.angular_v = 0.0f;
-                next_state = State::TURNDIR;
-                state_ = State::STOP;
-                stage++;
-                cmd.trans_v = 0.0f;
-                cmd.angular_v = 0.0f;
-            } else {
-                cmd.trans_v = 0.0f;
-                cmd.angular_v = 0.1 * (targets_[stage].theta - cur_pos.theta);
+            else {
+                /**
+                 * ZHIHAO RUAN:
+                 * 
+                 * wall follower:
+                 * e = 
+                 */
             }
         } else if (state_ == State::STOP) {
             if (stoppedtime == STOPTIME) {
@@ -150,7 +118,7 @@ public:
 
     void handlePath(const lcm::ReceiveBuffer *buf, const std::string &channel, const robot_path_t *path) {
         targets_ = path->path;
-        // std::reverse(targets_.begin(), targets_.end()); // store first at back to allow for easy pop_back()
+        std::reverse(targets_.begin(), targets_.end());  // store first at back to allow for easy pop_back()
 
         std::cout << "received new path at time: " << path->utime << "\n";
         for (auto pose : targets_) {
@@ -177,12 +145,28 @@ public:
         // TODO(EECS467) Implement your handler for new pose data (from the laser scan)
     }
 
+    void handleState(const lcm::ReceiveBuffer *buf, const std::string &channel, const curr_state_t *state) {
+        // ZHIHAO RUAN: massage handler for current state transmission
+        cur_state.fwd_velocity = state->fwd_velocity;
+        cur_state.turn_velocity = state->turn_velocity;
+        cur_state.left_velocity = state->left_velocity;
+        cur_state.right_velocity = state->right_velocity;
+    }
+
+    /**
+     * ZHIHAO RUAN:
+     * 
+     * wrapper for deciding if the robot is at target 
+     */
+    bool atTarget(const pose_xyt_t &cur_pos, const pose_xyt_t &target, const float &threshold) {
+        return sqrt((target.x - cur_pos.x) * (target.x - cur_pos.x) + (target.y - cur_pos.y) * (target.y - cur_pos.y)) < threshold;
+    }
+
 private:
     enum State {
-        TURNDIR,
         DRIVE,
-        TURNPOS,
-        STOP,
+        TURN,
+        STOP
     };
 
     std::vector<pose_xyt_t> targets_;
@@ -196,6 +180,9 @@ private:
     int stage;  //if the robot is driving to targets_[stage]
     pose_xyt_t cur_pos;
     int stoppedtime;
+    float wallfollower_k1;
+    float wallfollower_k2;
+    curr_state_t cur_state;
 
     int64_t time_offset;
     bool timesync_initialized_;
@@ -219,6 +206,7 @@ int main(int argc, char **argv) {
     // TODO(EECS467) Add additional subscribers to your customized messages.
     // For instance, instantaneous translational and rotational velocity of the robot, which is necessary
     // for your feedback controller.
+    lcmInstance.subscribe(MBOT_STATE_CHANNEL, &MotionController::handleState, &controller);
 
     signal(SIGINT, exit);
 
