@@ -48,76 +48,88 @@ public:
         cmd.trans_v = 0.0f;
         cmd.angular_v = 0.0f;
         cmd.utime = now();
-
-        if (targets_.empty())
+        
+        if(targets_.empty()) {
             return cmd;
+        }
 
-        if (state_ == TURNDIR)
-        {
-            printf("I am turning towards next target!\n");
-            if (sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) +
-                     (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y)) < 0.05)
-            {
-                state_ = TURNPOS;
+        pose_xyt_t pose_target = targets_.back();
+
+        if(state_ == TURN) {
+            cmd.trans_v = 0.0f;
+            float diff = 0.0;
+            if (cur_pos.theta - pose_target.theta < -M_PI){
+                diff = pose_target.theta - (cur_pos.theta + 2*M_PI);
+            }else if (cur_pos.theta - pose_target.theta>M_PI){
+                diff = pose_target.theta + 2*M_PI - cur_pos.theta;
+            }else{
+                diff = pose_target.theta - cur_pos.theta;
             }
-            else
-            {
-                float dir = atan((targets_[stage].y - cur_pos.y) / (targets_[stage].x - cur_pos.x));
-                printf("Direction is %f\n", dir);
-                if (abs(dir - cur_pos.theta) < 0.01)
-                {
-                    cmd.trans_v = 0.0f;
-                    cmd.angular_v = 0.0f;
-                    state_ = DRIVE;
-                }
-                else
-                {
-                    cmd.trans_v = 0.0f;
-                    cmd.angular_v = 0.01 * (dir - cur_pos.theta);
-                }
+
+            if (fabs(diff) <= 0.1) {
+                cmd.angular_v = 0.0f;
+                keep_heading = pose_target.theta;
+                state_ = DRIVE;
+                targets_.pop_back();
             }
-        }
-        else if (state_ == DRIVE)
-        {
-            printf("I am driving to the next target!\n");
-            if (sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) + (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y)) < 0.05)
-            {
+            else {
+                // float diff = 0.0;
+                // if (cur_pos.theta - pose_target.theta < -M_PI){
+                //     diff = pose_target.theta - (cur_pos.theta + 2*M_PI);
+                // }else if (cur_pos.theta - pose_target.theta>M_PI){
+                //     diff = pose_target.theta + 2*M_PI - cur_pos.theta;
+                // }else{
+                //     diff = pose_target.theta - cur_pos.theta;
+                // }
+                if(diff>0){
+                    cmd.angular_v = -1*(diff + 0.1);
+                }else{
+                    cmd.angular_v = -1*(diff - 0.1);
+                }
+                // cmd.angular_v = -1 * diff + 0.5;
+                printf("target=%f, cur=%f, diff=%f, ang_v=%f\n", pose_target.theta, cur_pos.theta, fabs(diff), cmd.angular_v);
+            }
+        } else if(state_ == DRIVE) {
+            float diff = sqrt(pow(pose_target.x - cur_pos.x, 2) + pow(pose_target.y - cur_pos.y, 2));
+            // printf("Driving, diff: %f\n", diff);
+            // printf("diff: %f; target: (%f, %f, %f); curr: (%f, %f, %f)\n", diff, pose_target.x, pose_target.y, pose_target.theta, cur_pos.x, cur_pos.y, cur_pos.theta);
+            // Reached target
+            if (diff < 0.05) {
                 cmd.trans_v = 0.0f;
                 cmd.angular_v = 0.0f;
-                // stage++;
-                state_ = TURNPOS;
+                state_ = TURN;
             }
-            else
-            {
-                cmd.trans_v = 0.1 * (sqrt(sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) + (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y))));
-                float dir = atan((targets_[stage].y - cur_pos.y) / (targets_[stage].x - cur_pos.x));
-                cmd.angular_v = 0.1 * (dir - cur_pos.theta);
+            else {
+                // float l1_dist = (pose_target.x - cur_pos.x) + (pose_target.y - cur_pos.y);
+                float debug_trans_v = std::min(1.2*diff + 0.05, 0.1); //0.1f;
+                float ang_diff = 0.0;
+                float dir = atan2((pose_target.y - cur_pos.y), (pose_target.x - cur_pos.x));
+                if (cur_pos.theta - dir < -M_PI){
+                    ang_diff = dir - (cur_pos.theta + 2*M_PI);
+                }else if (cur_pos.theta - dir > M_PI){
+                    ang_diff = dir + 2*M_PI - cur_pos.theta;
+                }else{
+                    ang_diff = dir - cur_pos.theta;
+                }
+                // if (cur_pos.theta - keep_heading < -M_PI){
+                //     ang_diff = keep_heading - (cur_pos.theta + 2*M_PI);
+                // }else if (cur_pos.theta - keep_heading > M_PI){
+                //     ang_diff = keep_heading + 2*M_PI - cur_pos.theta;
+                // }else{
+                //     ang_diff = keep_heading - cur_pos.theta;
+                // }
+                // cmd.trans_v = 0.1 * (sqrt(sqrt((targets_[stage].x - cur_pos.x) * (targets_[stage].x - cur_pos.x) + (targets_[stage].y - cur_pos.y) * (targets_[stage].y - cur_pos.y))));
+                
+                cmd.angular_v = -0.5 * ang_diff;
+                // float debug_ang_v = 2 * (cur_pos.theta - keep_heading);
+                cmd.trans_v = debug_trans_v;
+                // cmd.angular_v = debug_ang_v;
+                printf("dir: %f, cur.theta: %f, diff: %f, angle_diff: %f, ang_v: %f\n", dir, cur_pos.theta, diff, (cur_pos.theta - dir), cmd.angular_v);
             }
-        }
-        else if (state_ == TURNPOS)
-        {
-            printf("I am turning to pose!\n");
-            if (abs(targets_[stage].theta - cur_pos.theta) < 0.01)
-            {
-                cmd.trans_v = 0.0f;
-                cmd.angular_v = 0.0f;
-                state_ = TURNDIR;
-                stage++;
-            }
-            else
-            {
-                cmd.trans_v = 0.0f;
-                cmd.angular_v = 0.1 * (targets_[stage].theta - cur_pos.theta);
-            }
-        }
-        else
-        {
+        } else {
             std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
         }
-
-        // cmd.trans_v = 1.0f;
-        // cmd.angular_v = 0.0f;
-
+        
         return cmd;
     }
 
@@ -131,7 +143,13 @@ public:
 
     void handlePath(const lcm::ReceiveBuffer *buf, const std::string &channel, const robot_path_t *path)
     {
+        // pose_xyt_t debug;
+        // debug.x = 1.0f;
+        // debug.y = 0.0f;
+        // debug.theta = M_PI_2;
+        // targets_.push_back(debug);
         targets_ = path->path;
+
         std::reverse(targets_.begin(), targets_.end()); // store first at back to allow for easy pop_back()
 
         std::cout << "received new path at time: " << path->utime << "\n";
@@ -165,20 +183,20 @@ public:
 private:
     enum State
     {
-        TURNDIR,
+        TURN,
         DRIVE,
-        TURNPOS,
     };
 
     std::vector<pose_xyt_t> targets_;
 
     // TODO(EECS467) Initialize the state.
-    State state_ = State::TURNDIR;
+    State state_ = State::DRIVE;
 
     // TODO(EECS467) Add additional variables for the feedback
     // controllers here.
     int stage; //if the robot is driving to targets_[stage]
     pose_xyt_t cur_pos;
+    float keep_heading = 0.0f; // The heading to keep when driving straight
 
     int64_t time_offset;
     bool timesync_initialized_;

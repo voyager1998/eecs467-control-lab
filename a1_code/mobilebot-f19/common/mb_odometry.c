@@ -70,7 +70,13 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state) {
 float mb_clamp_radians(float angle) {
     // TODO(EECS467) Clamp the radians to range
     // from -pi to pi
-    angle = fmod(angle, 2 * PI) - PI;
+    // angle = fmod(angle, 2 * PI) - PI;
+    while (angle > PI) {
+        angle -= 2 * PI;
+    }
+    while (angle < -PI) {
+        angle += 2*PI;
+    }
     return angle;
 }
 

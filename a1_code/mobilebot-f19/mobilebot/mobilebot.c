@@ -230,7 +230,7 @@ void publish_mb_msgs() {
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
-    if (mb_state.turn_velocity > 0.18 || mb_state.turn_velocity < -0.18) {
+    if (mb_state.turn_velocity > 1 || mb_state.turn_velocity < -1) {
         turn_msg.x = mb_odometry.x;
         turn_msg.y = mb_odometry.y;
         turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
