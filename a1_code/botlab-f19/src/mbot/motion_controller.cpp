@@ -218,7 +218,7 @@ public:
             for (int i = 0; i< 4;i++){
                 float dist = dist_to_line(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
                 newLidar->thetas[corners[array_wrap(i+1,4)]], newLidar->ranges[corners[array_wrap(i+1,4)]]);
-                printf()
+                printf("Dist %d = %f\n", dist);
             }
         }
 
