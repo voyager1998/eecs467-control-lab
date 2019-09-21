@@ -23,5 +23,6 @@
 /************* ZHIHAO RUAN *************/
 // used for turning indication
 #define MBOT_TURN_CHANNEL "MBOT_TURNING"
+#define MBOT_STATE_CHANNEL "CURRENT_STATE"
 
 #endif // MBOT_CHANNELS_H
