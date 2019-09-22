@@ -208,15 +208,20 @@ public:
     void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
         int count = newLidar->num_ranges;
         std::vector<float> right_wall;  //(75~105)
+        std::vector<float> right_wall_thetas;
         std::vector<float> front_wall;  //(0~15) U (345~360)
-        std::vector<float> back_wall;   //(165~195)
+        std::vector<float> front_wall_thetas;
+        std::vector<float> back_wall;  //(165~195)
+        std::vector<float> back_wall_thetas;
 
+        // index of distance to the right wall in newLidar array
         int index_right_dist = 0;
         float dist_to_right = 5.0f;
         for (int i = 0; i < count; i++) {
             if (newLidar->thetas[i] > 75.0 / 180.0 * M_PI && newLidar->thetas[i] < 105.0 / 180.0 * M_PI) {
                 if (newLidar->ranges[i] > 0.2) {
                     right_wall.push_back(newLidar->ranges[i]);
+                    right_wall_thetas.push_back(newLidar->thetas[i]);
                     if (newLidar->ranges[i] < dist_to_right) {
                         dist_to_right = newLidar->ranges[i];
                         index_right_dist = i;
@@ -225,14 +230,15 @@ public:
             } else if ((newLidar->thetas[i] > 0 && newLidar->thetas[i] < 15.0 / 180.0 * M_PI) || (newLidar->thetas[i] > 345.0 / 180.0 * M_PI && newLidar->thetas[i] < 2 * M_PI)) {
                 if (newLidar->ranges[i] > 0.2) {
                     front_wall.push_back(newLidar->ranges[i]);
+                    front_wall_thetas.push_back(newLidar->thetas[i]);
                 }
             } else if (newLidar->thetas[i] > 165.0 / 180.0 * M_PI && newLidar->thetas[i] < 195.0 / 180.0 * M_PI) {
                 if (newLidar->ranges[i] > 0.2) {
                     back_wall.push_back(newLidar->ranges[i]);
+                    back_wall_thetas.push_back(newLidar->thetas[i]);
                 }
             }
         }
-        // float dist_to_right = *std::min_element(right_wall.begin(), right_wall.end());
         float dist_to_front = *std::min_element(front_wall.begin(), front_wall.end());
         float dist_to_back = *std::min_element(back_wall.begin(), back_wall.end());
 
