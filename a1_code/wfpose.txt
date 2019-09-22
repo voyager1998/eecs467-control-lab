@@ -1,0 +1,2301 @@
+---------------------------Frame---------------------------
+corner 0 angle: 0.288525
+corner 1 angle: 2.417281
+corner 2 angle: 5.652958
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.290161
+corner 1 angle: 2.581451
+corner 2 angle: 5.485788
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.289343
+corner 1 angle: 2.414281
+corner 2 angle: 4.723298
+corner 3 angle: 5.481698
+Dist 0 = 0.410879
+Dist 1 = 0.352411
+Dist 2 = 1.577121
+Dist 3 = 1.392015
+corner difference: -0.289343, -2.414281
+corner difference: -2.414281, 1.559888
+corner difference: 1.559888, 0.801488
+corner difference: 0.801488, -0.289343
+world frame pose: 0.352411, 0.410879
+---------------------------Frame---------------------------
+corner 0 angle: 0.288525
+corner 1 angle: 5.652958
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.442916
+corner 1 angle: 4.396321
+corner 2 angle: 5.729589
+corner 3 angle: 6.139741
+Dist 0 = 0.475027
+Dist 1 = 1.262260
+Dist 2 = 1.505923
+Dist 3 = 0.237658
+corner difference: -2.442916, 1.886865
+corner difference: 1.886865, 0.553596
+corner difference: 0.553596, 0.143444
+corner difference: 0.143444, -2.442916
+world frame pose: 0.475027, 0.410879
+---------------------------Frame---------------------------
+corner 0 angle: 0.284980
+corner 1 angle: 5.482789
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.561232
+corner 1 angle: 2.731986
+corner 2 angle: 5.480879
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.281434
+corner 1 angle: 5.480334
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.271617
+corner 1 angle: 2.444552
+corner 2 angle: 5.480334
+corner 3 angle: 6.157740
+Dist 0 = 0.392440
+Dist 1 = 0.049656
+Dist 2 = 1.513401
+Dist 3 = 1.433526
+corner difference: -0.271617, -2.444552
+corner difference: -2.444552, 0.802851
+corner difference: 0.802851, 0.125445
+corner difference: 0.125445, -0.271617
+world frame pose: 0.049656, 0.392440
+received new path at time: 6291193128
+(0,0,0); (0,1,-1.5708); (1,1,3.14159); (1,0,1.5708); (0,0,0); (0,1,-1.5708); (1,1,3.14159); (1,0,1.5708); (0,0,0); (0,1,-1.5708); (1,1,3.14159); (1,0,1.5708); (0,0,0); 
+---------------------------Frame---------------------------
+corner 0 angle: 0.300524
+corner 1 angle: 2.445370
+corner 2 angle: 2.923972
+corner 3 angle: 4.403411
+corner 4 angle: 5.220716
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.284707
+corner 1 angle: 4.459316
+corner 2 angle: 5.581236
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.400373
+corner 1 angle: 2.433371
+corner 2 angle: 4.324872
+corner 3 angle: 5.416247
+corner 4 angle: 6.161558
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.246528
+corner 1 angle: 2.862613
+corner 2 angle: 4.306327
+corner 3 angle: 5.458790
+Dist 0 = 0.195816
+Dist 1 = 0.509328
+Dist 2 = 1.484699
+Dist 3 = 1.373670
+corner difference: -0.276323, -2.892409
+corner difference: -2.892409, 1.947062
+corner difference: 1.947062, 0.794599
+corner difference: 0.794599, -0.276323
+world frame pose: 0.509328, 0.195816
+---------------------------Frame---------------------------
+corner 0 angle: 0.236438
+corner 1 angle: 2.447552
+corner 2 angle: 5.725771
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.773165
+corner 1 angle: 4.409956
+corner 2 angle: 5.729043
+corner 3 angle: 6.158012
+Dist 0 = 0.624282
+Dist 1 = 1.316629
+Dist 2 = 1.521135
+Dist 3 = 0.118416
+corner difference: -2.781799, 1.864595
+corner difference: 1.864595, 0.545508
+corner difference: 0.545508, 0.116539
+corner difference: 0.116539, -2.781799
+world frame pose: 0.624282, 0.195816
+---------------------------Frame---------------------------
+corner 0 angle: 0.504782
+corner 1 angle: 2.668172
+corner 2 angle: 4.542219
+corner 3 angle: 5.466153
+Dist 0 = 0.407027
+Dist 1 = 0.531897
+Dist 2 = 1.514514
+Dist 3 = 1.171264
+corner difference: -0.513416, -2.676806
+corner difference: -2.676806, 1.732332
+corner difference: 1.732332, 0.808398
+corner difference: 0.808398, -0.513416
+world frame pose: 0.531897, 0.407027
+---------------------------Frame---------------------------
+corner 0 angle: 0.919298
+corner 1 angle: 2.753257
+corner 2 angle: 2.797163
+corner 3 angle: 4.479496
+corner 4 angle: 5.413793
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.733622
+corner 1 angle: 4.454408
+corner 2 angle: 5.858580
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.340339
+corner 1 angle: 2.987786
+corner 2 angle: 4.342052
+corner 3 angle: 5.597871
+Dist 0 = 0.235590
+Dist 1 = 0.762324
+Dist 2 = 1.345242
+Dist 3 = 1.199378
+corner difference: -0.325358, -2.972804
+corner difference: -2.972804, 1.956115
+corner difference: 1.956115, 0.700296
+corner difference: 0.700296, -0.325358
+world frame pose: 0.762324, 0.235590
+---------------------------Frame---------------------------
+corner 0 angle: 0.649862
+corner 1 angle: 2.810798
+corner 2 angle: 4.565127
+corner 3 angle: 5.551784
+Dist 0 = 0.428223
+Dist 1 = 0.599090
+Dist 2 = 1.406152
+Dist 3 = 1.116247
+corner difference: -0.629026, -2.789962
+corner difference: -2.789962, 1.738895
+corner difference: 1.738895, 0.752239
+corner difference: 0.752239, -0.629026
+world frame pose: 0.599090, 0.428223
+---------------------------Frame---------------------------
+corner 0 angle: 0.358065
+corner 1 angle: 2.674444
+corner 2 angle: 5.387886
+corner 3 angle: 5.399067
+corner 4 angle: 6.153377
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.379064
+corner 1 angle: 2.683989
+corner 2 angle: 4.231606
+corner 3 angle: 5.426610
+corner 4 angle: 6.157740
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.616865
+corner 1 angle: 2.754893
+corner 2 angle: 5.920211
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.722948
+corner 1 angle: 3.049963
+corner 2 angle: 4.183064
+corner 3 angle: 5.389250
+Dist 0 = 0.381266
+Dist 1 = 0.834526
+Dist 2 = 1.425273
+Dist 3 = 0.928345
+corner difference: -0.681780, -3.008795
+corner difference: -3.008795, 2.141290
+corner difference: 2.141290, 0.935104
+corner difference: 0.935104, -0.681780
+world frame pose: 0.834526, 0.381266
+---------------------------Frame---------------------------
+corner 0 angle: 0.470148
+corner 1 angle: 0.671134
+corner 2 angle: 2.790072
+corner 3 angle: 4.132885
+corner 4 angle: 5.296256
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.433333
+corner 1 angle: 2.812980
+corner 2 angle: 2.824161
+corner 3 angle: 4.102342
+corner 4 angle: 5.250169
+corner 5 angle: 6.155013
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.534507
+corner 1 angle: 2.813253
+corner 2 angle: 4.065526
+corner 3 angle: 5.202717
+corner 4 angle: 6.171103
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.515418
+corner 1 angle: 2.856613
+corner 2 angle: 4.038256
+corner 3 angle: 5.463972
+corner 4 angle: 6.163194
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.609774
+corner 1 angle: 3.954807
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.671406
+corner 1 angle: 2.819525
+corner 2 angle: 3.933809
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.142645
+corner 1 angle: 2.833706
+corner 2 angle: 3.100687
+corner 3 angle: 3.997622
+corner 4 angle: 4.432319
+corner 5 angle: 5.072091
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.716676
+corner 1 angle: 2.088668
+corner 2 angle: 3.630012
+corner 3 angle: 5.254532
+Dist 0 = 0.344849
+Dist 1 = 0.468401
+Dist 2 = 1.346570
+Dist 3 = 0.391126
+corner difference: 0.726125, -0.645868
+corner difference: -0.645868, -2.187212
+corner difference: -2.187212, 2.471454
+corner difference: 2.471454, 0.726125
+world frame pose: 1.346570, 0.468401
+---------------------------Frame---------------------------
+corner 0 angle: 2.611449
+corner 1 angle: 4.439682
+corner 2 angle: 5.522876
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.563782
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.610961
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.361338
+corner 1 angle: 2.673899
+corner 2 angle: 4.657847
+corner 3 angle: 4.668756
+corner 4 angle: 5.448427
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.205095
+corner 1 angle: 2.148391
+corner 2 angle: 2.413463
+corner 3 angle: 4.003349
+corner 4 angle: 4.615033
+corner 5 angle: 5.803765
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.396790
+corner 1 angle: 4.356233
+corner 2 angle: 5.070182
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.653135
+corner 1 angle: 5.483879
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.123613
+corner 1 angle: 6.149013
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.544870
+corner 1 angle: 2.752984
+corner 2 angle: 4.331962
+corner 3 angle: 5.393613
+Dist 0 = 0.441687
+Dist 1 = 0.774589
+Dist 2 = 1.479700
+Dist 3 = 1.000101
+corner difference: 1.096859, -1.111255
+corner difference: -1.111255, -2.690232
+corner difference: -2.690232, 2.531302
+corner difference: 2.531302, 1.096859
+world frame pose: 1.479700, 0.774589
+---------------------------Frame---------------------------
+corner 0 angle: 4.186608
+corner 1 angle: 5.351616
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.442059
+corner 1 angle: 2.752712
+corner 2 angle: 2.763893
+corner 3 angle: 2.774801
+corner 4 angle: 4.206516
+corner 5 angle: 5.317528
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.763347
+corner 1 angle: 4.152793
+corner 2 angle: 5.264349
+corner 3 angle: 6.138378
+Dist 0 = 0.928633
+Dist 1 = 1.451774
+Dist 2 = 1.230726
+Dist 3 = 0.129184
+corner difference: -1.184105, -2.573551
+corner difference: -2.573551, 2.598078
+corner difference: 2.598078, 1.724050
+corner difference: 1.724050, -1.184105
+world frame pose: 1.451774, 0.928633
+---------------------------Frame---------------------------
+corner 0 angle: 6.167284
+corner 1 angle: 6.176284
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.492510
+corner 1 angle: 2.744803
+corner 2 angle: 4.116523
+corner 3 angle: 5.223716
+corner 4 angle: 6.160739
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.131522
+corner 1 angle: 5.192355
+corner 2 angle: 6.158831
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.330522
+corner 1 angle: 2.771528
+corner 2 angle: 4.205971
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.442877
+corner 1 angle: 2.752439
+corner 2 angle: 4.248240
+corner 3 angle: 5.166175
+Dist 0 = 0.425564
+Dist 1 = 0.976099
+Dist 2 = 1.525896
+Dist 3 = 0.856866
+corner difference: 1.116830, -1.192731
+corner difference: -1.192731, -2.688533
+corner difference: -2.688533, 2.676718
+corner difference: 2.676718, 1.116830
+world frame pose: 1.525896, 0.976099
+---------------------------Frame---------------------------
+corner 0 angle: 0.485965
+corner 1 angle: 4.002803
+corner 2 angle: 5.276349
+corner 3 angle: 6.170012
+Dist 0 = 0.228670
+Dist 1 = 1.446594
+Dist 2 = 0.724446
+Dist 3 = 0.747808
+corner difference: 1.074613, -2.442225
+corner difference: -2.442225, 2.567415
+corner difference: 2.567415, 1.673752
+corner difference: 1.673752, 1.074613
+world frame pose: 1.446594, 0.976099
+---------------------------Frame---------------------------
+corner 0 angle: 0.223893
+corner 1 angle: 2.795527
+corner 2 angle: 4.190154
+corner 3 angle: 4.992460
+Dist 0 = 0.249893
+Dist 1 = 1.131553
+Dist 2 = 1.459861
+Dist 3 = 0.622278
+corner difference: 1.285901, -1.285733
+corner difference: -1.285733, -2.680360
+corner difference: -2.680360, 2.800519
+corner difference: 2.800519, 1.285901
+world frame pose: 1.459861, 1.131553
+---------------------------Frame---------------------------
+corner 0 angle: 0.841576
+corner 1 angle: 2.835615
+corner 2 angle: 3.888539
+corner 3 angle: 5.116542
+Dist 0 = 0.541177
+Dist 1 = 1.344625
+Dist 2 = 1.433152
+Dist 3 = 0.560544
+corner difference: 1.093855, -0.900183
+corner difference: -0.900183, -1.953108
+corner difference: -1.953108, 3.102075
+corner difference: 3.102075, 1.093855
+world frame pose: 1.433152, 1.344625
+---------------------------Frame---------------------------
+corner 0 angle: 1.373356
+corner 1 angle: 3.765275
+corner 2 angle: 4.934646
+corner 3 angle: 6.114925
+Dist 0 = 0.338144
+Dist 1 = 1.375473
+Dist 2 = 1.408378
+Dist 3 = 0.630914
+corner difference: 1.280494, -1.111426
+corner difference: -1.111426, -2.280796
+corner difference: -2.280796, 2.822110
+corner difference: 2.822110, 1.280494
+world frame pose: 1.408378, 1.375473
+---------------------------Frame---------------------------
+corner 0 angle: 0.607865
+corner 1 angle: 2.103395
+corner 2 angle: 2.490367
+corner 3 angle: 4.340961
+corner 4 angle: 4.351870
+corner 5 angle: 5.444882
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.276798
+corner 1 angle: 2.376102
+corner 2 angle: 4.479224
+corner 3 angle: 5.553965
+Dist 0 = 0.462370
+Dist 1 = 0.457433
+Dist 2 = 1.404797
+Dist 3 = 1.457480
+corner difference: 2.917319, 0.818014
+corner difference: 0.818014, -1.285107
+corner difference: -1.285107, -2.359849
+corner difference: -2.359849, 2.917319
+world frame pose: 1.457480, 1.404797
+---------------------------Frame---------------------------
+corner 0 angle: 0.325068
+corner 1 angle: 2.285836
+corner 2 angle: 4.416774
+corner 3 angle: 5.063091
+Dist 0 = 0.431651
+Dist 1 = 0.380647
+Dist 2 = 1.408535
+Dist 3 = 1.062683
+corner difference: 2.850068, 0.889299
+corner difference: 0.889299, -1.241639
+corner difference: -1.241639, -1.887956
+corner difference: -1.887956, 2.850068
+world frame pose: 1.062683, 1.408535
+---------------------------Frame---------------------------
+corner 0 angle: 0.325886
+corner 1 angle: 2.465278
+corner 2 angle: 3.382666
+corner 3 angle: 4.388685
+corner 4 angle: 5.536785
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.529909
+corner 1 angle: 5.257532
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.410793
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.328885
+corner 1 angle: 2.891793
+corner 2 angle: 4.260512
+corner 3 angle: 5.414611
+Dist 0 = 0.262563
+Dist 1 = 0.663002
+Dist 2 = 1.377308
+Dist 3 = 1.291228
+corner difference: 2.830096, 0.267189
+corner difference: 0.267189, -1.101531
+corner difference: -1.101531, -2.255630
+corner difference: -2.255630, 2.830096
+world frame pose: 1.291228, 1.377308
+---------------------------Frame---------------------------
+corner 0 angle: 0.372519
+corner 1 angle: 5.495060
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.647446
+corner 1 angle: 4.183064
+corner 2 angle: 5.318618
+corner 3 angle: 5.702045
+Dist 0 = 0.805162
+Dist 1 = 1.401660
+Dist 2 = 1.714649
+Dist 3 = 0.052448
+corner difference: 0.494470, -1.041147
+corner difference: -1.041147, -2.176702
+corner difference: -2.176702, -2.560129
+corner difference: -2.560129, 0.494470
+world frame pose: 0.052448, 1.714649
+---------------------------Frame---------------------------
+corner 0 angle: 4.144066
+corner 1 angle: 4.942009
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.401698
+corner 1 angle: 2.698170
+corner 2 angle: 4.394684
+corner 3 angle: 5.252623
+corner 4 angle: 6.159922
+corner 5 angle: 6.168648
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.917757
+corner 1 angle: 6.159376
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.379882
+corner 1 angle: 2.733077
+corner 2 angle: 4.496677
+corner 3 angle: 5.316710
+corner 4 angle: 6.158285
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.459240
+corner 1 angle: 0.741220
+corner 2 angle: 2.753530
+corner 3 angle: 4.056527
+corner 4 angle: 4.986733
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.479966
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.584413
+corner 1 angle: 2.932698
+corner 2 angle: 4.022711
+corner 3 angle: 5.150358
+corner 4 angle: 6.164830
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.660498
+corner 1 angle: 3.893448
+corner 2 angle: 4.973371
+corner 3 angle: 6.173284
+Dist 0 = 0.047120
+Dist 1 = 1.405165
+Dist 2 = 0.650817
+Dist 3 = 0.626183
+corner difference: -2.738603, 0.311632
+corner difference: 0.311632, -0.768290
+corner difference: -0.768290, -1.968204
+corner difference: -1.968204, -2.738603
+world frame pose: 0.047120, 0.626183
+---------------------------Frame---------------------------
+corner 0 angle: 0.537234
+corner 1 angle: 2.799072
+corner 2 angle: 3.101778
+corner 3 angle: 3.998168
+corner 4 angle: 4.009348
+corner 5 angle: 5.136177
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.712585
+corner 1 angle: 4.356778
+corner 2 angle: 5.343435
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.224166
+corner 1 angle: 0.338430
+corner 2 angle: 2.340378
+corner 3 angle: 5.515786
+corner 4 angle: 5.832399
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.423826
+corner 1 angle: 4.507858
+corner 2 angle: 5.499424
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.347975
+corner 1 angle: 4.375050
+corner 2 angle: 5.473789
+corner 3 angle: 6.147377
+Dist 0 = 0.618764
+Dist 1 = 1.393566
+Dist 2 = 1.470973
+Dist 3 = 1.385203
+corner difference: -1.870083, 0.386028
+corner difference: 0.386028, -0.712712
+corner difference: -0.712712, -1.386300
+corner difference: -1.386300, -1.870083
+world frame pose: 0.618764, 1.385203
+---------------------------Frame---------------------------
+corner 0 angle: 1.943042
+corner 1 angle: 2.462551
+corner 2 angle: 4.427955
+corner 3 angle: 4.435045
+corner 4 angle: 5.936847
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.514365
+corner 1 angle: 4.341506
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.421606
+corner 1 angle: 2.588542
+corner 2 angle: 4.306327
+corner 3 angle: 5.078362
+corner 4 angle: 6.159649
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.205894
+corner 1 angle: 2.609267
+corner 2 angle: 4.440227
+corner 3 angle: 5.419248
+Dist 0 = 0.376078
+Dist 1 = 0.692199
+Dist 2 = 1.384390
+Dist 3 = 1.132246
+corner difference: -1.715672, 2.164141
+corner difference: 2.164141, 0.333181
+corner difference: 0.333181, -0.645839
+corner difference: -0.645839, -1.715672
+world frame pose: 0.376078, 1.132246
+---------------------------Frame---------------------------
+corner 0 angle: 0.397881
+corner 1 angle: 2.763347
+corner 2 angle: 4.225333
+corner 3 angle: 5.581781
+Dist 0 = 0.385118
+Dist 1 = 0.780553
+Dist 2 = 1.370820
+Dist 3 = 1.258730
+corner difference: -1.921442, 1.996277
+corner difference: 1.996277, 0.534291
+corner difference: 0.534291, -0.822157
+corner difference: -0.822157, -1.921442
+world frame pose: 0.385118, 1.258730
+---------------------------Frame---------------------------
+corner 0 angle: 0.433060
+corner 1 angle: 2.643901
+corner 2 angle: 4.189336
+corner 3 angle: 5.206808
+Dist 0 = 0.505884
+Dist 1 = 0.910578
+Dist 2 = 1.398572
+Dist 3 = 0.971918
+corner difference: -1.976575, 2.095768
+corner difference: 2.095768, 0.550334
+corner difference: 0.550334, -0.467138
+corner difference: -0.467138, -1.976575
+world frame pose: 0.505884, 0.971918
+---------------------------Frame---------------------------
+corner 0 angle: 0.404698
+corner 1 angle: 4.293510
+corner 2 angle: 5.331163
+corner 3 angle: 6.158558
+Dist 0 = 0.460014
+Dist 1 = 1.277269
+Dist 2 = 1.055113
+Dist 3 = 1.032296
+corner difference: -1.953964, 0.440409
+corner difference: 0.440409, -0.597244
+corner difference: -0.597244, -1.424639
+corner difference: -1.424639, -1.953964
+world frame pose: 0.460014, 1.032296
+---------------------------Frame---------------------------
+corner 0 angle: 0.454331
+corner 1 angle: 2.661900
+corner 2 angle: 4.120341
+corner 3 angle: 5.060091
+Dist 0 = 0.487555
+Dist 1 = 0.982814
+Dist 2 = 1.405634
+Dist 3 = 0.814158
+corner difference: -2.003597, 2.072019
+corner difference: 2.072019, 0.613578
+corner difference: 0.613578, -0.326173
+corner difference: -0.326173, -2.003597
+world frame pose: 0.487555, 0.814158
+---------------------------Frame---------------------------
+corner 0 angle: 2.671172
+corner 1 angle: 4.408593
+corner 2 angle: 5.261350
+corner 3 angle: 6.160739
+Dist 0 = 0.865692
+Dist 1 = 1.484882
+Dist 2 = 0.912442
+Dist 3 = 0.176725
+corner difference: 2.055396, 0.317975
+corner difference: 0.317975, -0.534782
+corner difference: -0.534782, -1.434171
+corner difference: -1.434171, 2.055396
+world frame pose: 0.176725, 0.912442
+---------------------------Frame---------------------------
+corner 0 angle: 0.698677
+corner 1 angle: 2.969514
+corner 2 angle: 2.991604
+corner 3 angle: 5.223989
+One corner two maxs!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.504509
+corner 1 angle: 2.689989
+corner 2 angle: 4.033074
+corner 3 angle: 5.193173
+corner 4 angle: 6.152832
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.734402
+corner 1 angle: 2.751075
+corner 2 angle: 4.157429
+corner 3 angle: 4.830472
+corner 4 angle: 4.841380
+corner 5 angle: 6.160739
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.513236
+corner 1 angle: 2.742076
+corner 2 angle: 3.394393
+corner 3 angle: 4.006076
+corner 4 angle: 5.157994
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.610593
+corner 1 angle: 2.754075
+corner 2 angle: 3.856359
+corner 3 angle: 4.921010
+Dist 0 = 0.469356
+Dist 1 = 1.296224
+Dist 2 = 1.317181
+Dist 3 = 0.539207
+corner difference: -2.184301, 1.955402
+corner difference: 1.955402, 0.853118
+corner difference: 0.853118, -0.211533
+corner difference: -0.211533, -2.184301
+world frame pose: 0.469356, 0.539207
+---------------------------Frame---------------------------
+corner 0 angle: 0.651771
+corner 1 angle: 2.756529
+corner 2 angle: 5.039638
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.670588
+corner 1 angle: 2.745076
+corner 2 angle: 3.875449
+corner 3 angle: 4.967916
+Dist 0 = 0.475138
+Dist 1 = 1.397960
+Dist 2 = 1.394426
+Dist 3 = 0.505686
+corner difference: -2.293180, 1.915518
+corner difference: 1.915518, 0.785144
+corner difference: 0.785144, -0.307323
+corner difference: -0.307323, -2.293180
+world frame pose: 0.475138, 0.505686
+---------------------------Frame---------------------------
+corner 0 angle: 0.515690
+corner 1 angle: 2.815980
+corner 2 angle: 3.994077
+corner 3 angle: 4.273875
+Dist 0 = 0.436783
+Dist 1 = 1.421654
+Dist 2 = 1.844415
+Dist 3 = 0.347556
+corner difference: -1.241802, 2.741094
+corner difference: 2.741094, 1.562997
+corner difference: 1.562997, 1.283199
+corner difference: 1.283199, -1.241802
+world frame pose: 0.436783, 0.505686
+---------------------------Frame---------------------------
+corner 0 angle: 0.566141
+corner 1 angle: 1.126010
+corner 2 angle: 1.853322
+corner 3 angle: 4.036347
+corner 4 angle: 4.585580
+corner 5 angle: 5.224261
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.154080
+corner 1 angle: 0.369792
+corner 2 angle: 2.589360
+corner 3 angle: 4.391412
+corner 4 angle: 5.883396
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.385647
+corner 1 angle: 5.501878
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.316886
+corner 1 angle: 0.327795
+corner 2 angle: 2.547908
+corner 3 angle: 4.488769
+corner 4 angle: 4.660575
+corner 5 angle: 5.465335
+corner 6 angle: 6.156104
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.353429
+corner 1 angle: 5.011549
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.353975
+corner 1 angle: 2.593723
+corner 2 angle: 5.484425
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.361065
+corner 1 angle: 2.635175
+corner 2 angle: 4.178428
+corner 3 angle: 5.337980
+Dist 0 = 0.423616
+Dist 1 = 0.799392
+Dist 2 = 1.450758
+Dist 3 = 1.075432
+corner difference: -0.348808, -2.622918
+corner difference: -2.622918, 2.117014
+corner difference: 2.117014, 0.957462
+corner difference: 0.957462, -0.348808
+world frame pose: 0.799392, 0.423616
+---------------------------Frame---------------------------
+corner 0 angle: 0.377427
+corner 1 angle: 2.645265
+corner 2 angle: 4.148157
+corner 3 angle: 5.308528
+Dist 0 = 0.430757
+Dist 1 = 0.841408
+Dist 2 = 1.461669
+Dist 3 = 1.034870
+corner difference: -0.366524, -2.634361
+corner difference: -2.634361, 2.145932
+corner difference: 2.145932, 0.985560
+corner difference: 0.985560, -0.366524
+world frame pose: 0.841408, 0.430757
+---------------------------Frame---------------------------
+corner 0 angle: 0.390517
+corner 1 angle: 2.668990
+corner 2 angle: 4.127431
+corner 3 angle: 5.286438
+Dist 0 = 0.430033
+Dist 1 = 0.888875
+Dist 2 = 1.469879
+Dist 3 = 0.996409
+corner difference: -0.383416, -2.661889
+corner difference: -2.661889, 2.162855
+corner difference: 2.162855, 1.003848
+corner difference: 1.003848, -0.383416
+world frame pose: 0.888875, 0.430033
+---------------------------Frame---------------------------
+corner 0 angle: 0.402517
+corner 1 angle: 2.695170
+corner 2 angle: 4.675301
+corner 3 angle: 5.453609
+Dist 0 = 0.423241
+Dist 1 = 0.652168
+Dist 2 = 1.433262
+Dist 3 = 1.000228
+corner difference: -0.398344, -2.690997
+corner difference: -2.690997, 1.612058
+corner difference: 1.612058, 0.833750
+corner difference: 0.833750, -0.398344
+world frame pose: 0.652168, 0.423241
+---------------------------Frame---------------------------
+corner 0 angle: 0.363519
+corner 1 angle: 2.590451
+corner 2 angle: 4.099615
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.633500
+corner 1 angle: 2.726532
+corner 2 angle: 4.085707
+corner 3 angle: 5.453609
+Dist 0 = 0.513127
+Dist 1 = 0.977497
+Dist 2 = 1.266957
+Dist 3 = 0.877692
+corner difference: -0.639589, -2.732621
+corner difference: -2.732621, 2.191389
+corner difference: 2.191389, 0.823488
+corner difference: 0.823488, -0.639589
+world frame pose: 0.977497, 0.513127
+---------------------------Frame---------------------------
+corner 0 angle: 0.503691
+corner 1 angle: 2.992694
+corner 2 angle: 4.396866
+corner 3 angle: 5.341253
+Dist 0 = 0.307157
+Dist 1 = 0.912668
+Dist 2 = 1.499711
+Dist 3 = 0.850880
+corner difference: -0.509780, -2.998784
+corner difference: -2.998784, 1.880230
+corner difference: 1.880230, 0.935843
+corner difference: 0.935843, -0.509780
+world frame pose: 0.912668, 0.307157
+---------------------------Frame---------------------------
+corner 0 angle: 4.047528
+corner 1 angle: 5.190719
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.588230
+corner 1 angle: 2.688898
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.438514
+corner 1 angle: 2.839978
+corner 2 angle: 4.019984
+corner 3 angle: 5.166175
+corner 4 angle: 6.164012
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.742894
+corner 1 angle: 3.989713
+corner 2 angle: 6.161830
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.751621
+corner 1 angle: 3.944990
+corner 2 angle: 5.103452
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.829031
+corner 1 angle: 2.786527
+corner 2 angle: 3.883903
+corner 3 angle: 5.080817
+Dist 0 = 0.551714
+Dist 1 = 1.340405
+Dist 2 = 1.442780
+Dist 3 = 0.543063
+corner difference: -0.876519, -2.834015
+corner difference: -2.834015, 2.351794
+corner difference: 2.351794, 1.154880
+corner difference: 1.154880, -0.876519
+world frame pose: 1.340405, 0.551714
+---------------------------Frame---------------------------
+corner 0 angle: 3.556109
+corner 1 angle: 6.203010
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 3.032510
+corner 1 angle: 6.024931
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.193096
+corner 1 angle: 3.536474
+corner 2 angle: 4.718116
+corner 3 angle: 5.922666
+corner 4 angle: 6.229189
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.521963
+corner 1 angle: 2.773437
+corner 2 angle: 3.906265
+corner 3 angle: 5.048092
+corner 4 angle: 6.162376
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.623778
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.933498
+corner 1 angle: 2.450279
+corner 2 angle: 4.194244
+corner 3 angle: 4.422501
+corner 4 angle: 4.433136
+corner 5 angle: 5.488515
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.280616
+corner 1 angle: 5.736952
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.174806
+corner 1 angle: 2.615267
+corner 2 angle: 3.168591
+corner 3 angle: 3.376667
+corner 4 angle: 3.528292
+corner 5 angle: 3.667100
+corner 6 angle: 4.424137
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.299978
+corner 1 angle: 2.487094
+corner 2 angle: 4.451135
+corner 3 angle: 5.487424
+corner 4 angle: 5.711317
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.502055
+corner 1 angle: 6.072927
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.514054
+corner 1 angle: 4.404502
+corner 2 angle: 5.477880
+corner 3 angle: 6.140832
+Dist 0 = 0.532010
+Dist 1 = 1.430474
+Dist 2 = 1.382754
+Dist 3 = 1.318150
+corner difference: 1.134505, -2.755943
+corner difference: -2.755943, 2.453864
+corner difference: 2.453864, 1.790912
+corner difference: 1.790912, 1.134505
+world frame pose: 1.430474, 0.551714
+---------------------------Frame---------------------------
+corner 0 angle: 0.515418
+corner 1 angle: 5.880396
+corner 2 angle: 6.140832
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.368428
+corner 1 angle: 2.585269
+corner 2 angle: 4.309054
+corner 3 angle: 5.445700
+Dist 0 = 0.429261
+Dist 1 = 0.644077
+Dist 2 = 1.424307
+Dist 3 = 1.235213
+corner difference: 1.248984, -0.967857
+corner difference: -0.967857, -2.691643
+corner difference: -2.691643, 2.454897
+corner difference: 2.454897, 1.248984
+world frame pose: 1.424307, 0.644077
+---------------------------Frame---------------------------
+corner 0 angle: 4.232424
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.634591
+corner 1 angle: 4.358142
+corner 2 angle: 5.416793
+corner 3 angle: 6.158012
+corner 4 angle: 6.168921
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.383154
+corner 1 angle: 0.547052
+corner 2 angle: 4.139430
+corner 3 angle: 6.163467
+Dist 0 = 1.099190
+Dist 1 = 0.307599
+Dist 2 = 0.664880
+Dist 3 = 1.024754
+corner difference: 1.183261, 1.019364
+corner difference: 1.019364, -2.573015
+corner difference: -2.573015, 1.686134
+corner difference: 1.686134, 1.183261
+world frame pose: 0.664880, 0.644077
+---------------------------Frame---------------------------
+corner 0 angle: 0.388881
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.380155
+corner 1 angle: 2.625357
+corner 2 angle: 4.274148
+corner 3 angle: 5.356797
+Dist 0 = 0.456659
+Dist 1 = 0.747798
+Dist 2 = 1.458957
+Dist 3 = 1.194077
+corner difference: 1.174729, -1.070473
+corner difference: -1.070473, -2.719264
+corner difference: -2.719264, 2.481272
+corner difference: 2.481272, 1.174729
+world frame pose: 1.458957, 0.747798
+---------------------------Frame---------------------------
+corner 0 angle: 2.720532
+corner 1 angle: 4.402320
+corner 2 angle: 5.123087
+corner 3 angle: 6.158012
+Dist 0 = 0.851900
+Dist 1 = 1.441196
+Dist 2 = 0.874614
+Dist 3 = 0.145747
+corner difference: -1.176179, -2.857968
+corner difference: -2.857968, 2.704451
+corner difference: 2.704451, 1.669526
+corner difference: 1.669526, -1.176179
+world frame pose: 1.441196, 0.851900
+---------------------------Frame---------------------------
+corner 0 angle: 0.021271
+corner 1 angle: 0.034361
+corner 2 angle: 0.045269
+corner 3 angle: 2.673626
+corner 4 angle: 2.684807
+corner 5 angle: 4.012349
+corner 6 angle: 5.161266
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.258077
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.437150
+corner 1 angle: 2.718078
+corner 2 angle: 4.202971
+corner 3 angle: 4.887195
+Dist 0 = 0.439554
+Dist 1 = 1.055392
+Dist 2 = 1.491928
+Dist 3 = 0.685209
+corner difference: 1.094815, -1.186112
+corner difference: -1.186112, -2.671006
+corner difference: -2.671006, 2.927956
+corner difference: 2.927956, 1.094815
+world frame pose: 1.491928, 1.055392
+---------------------------Frame---------------------------
+corner 0 angle: 0.568596
+corner 1 angle: 2.854431
+corner 2 angle: 3.920991
+corner 3 angle: 4.959189
+Dist 0 = 0.416620
+Dist 1 = 1.204101
+Dist 2 = 1.440848
+Dist 3 = 0.628416
+corner difference: 0.962262, -1.323574
+corner difference: -1.323574, -2.390134
+corner difference: -2.390134, 2.854853
+corner difference: 2.854853, 0.962262
+world frame pose: 1.440848, 1.204101
+---------------------------Frame---------------------------
+corner 0 angle: 0.865301
+corner 1 angle: 4.039892
+corner 2 angle: 4.955917
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.800397
+corner 1 angle: 2.753257
+corner 2 angle: 3.875994
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.563687
+corner 1 angle: 0.791398
+corner 2 angle: 4.331417
+corner 3 angle: 4.354597
+corner 4 angle: 5.530785
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.501256
+corner 1 angle: 5.063091
+corner 2 angle: 6.145741
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.415683
+corner 1 angle: 5.505969
+corner 2 angle: 6.231644
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.697859
+corner 1 angle: 2.310380
+corner 2 angle: 3.152774
+corner 3 angle: 3.875722
+corner 4 angle: 3.884721
+corner 5 angle: 4.694390
+corner 6 angle: 5.381341
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.277071
+corner 1 angle: 5.534057
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.634902
+corner 1 angle: 4.543856
+corner 2 angle: 5.546602
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.580595
+corner 1 angle: 2.418099
+corner 2 angle: 4.500768
+corner 3 angle: 5.655413
+Dist 0 = 0.501540
+Dist 1 = 0.420842
+Dist 2 = 1.325550
+Dist 3 = 1.347374
+corner difference: 2.558790, 0.721286
+corner difference: 0.721286, -1.361383
+corner difference: -1.361383, -2.516028
+corner difference: -2.516028, 2.558790
+world frame pose: 1.347374, 1.325550
+---------------------------Frame---------------------------
+corner 0 angle: 0.561232
+corner 1 angle: 2.376920
+corner 2 angle: 4.543856
+corner 3 angle: 5.407794
+corner 4 angle: 6.140286
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.409138
+corner 1 angle: 6.079200
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.653135
+corner 1 angle: 2.703897
+corner 2 angle: 4.525857
+corner 3 angle: 5.351070
+Dist 0 = 0.585102
+Dist 1 = 0.666703
+Dist 2 = 1.485052
+Dist 3 = 1.222339
+corner difference: 2.472427, 0.421665
+corner difference: 0.421665, -1.400295
+corner difference: -1.400295, -2.225508
+corner difference: -2.225508, 2.472427
+world frame pose: 1.222339, 1.485052
+---------------------------Frame---------------------------
+corner 0 angle: 0.269981
+corner 1 angle: 2.533727
+corner 2 angle: 2.544636
+corner 3 angle: 4.377777
+One corner two maxs!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.317704
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.632993
+corner 1 angle: 4.135340
+corner 2 angle: 5.280167
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.356974
+corner 1 angle: 4.045891
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.572141
+corner 1 angle: 2.654264
+corner 2 angle: 4.392503
+corner 3 angle: 5.205172
+corner 4 angle: 5.449245
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.374428
+corner 1 angle: 2.679353
+corner 2 angle: 4.061163
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.372246
+corner 1 angle: 2.660536
+corner 2 angle: 4.022166
+corner 3 angle: 5.122541
+Dist 0 = 0.463092
+Dist 1 = 1.136771
+Dist 2 = 1.428385
+Dist 3 = 0.856577
+corner difference: 2.726650, 0.438360
+corner difference: 0.438360, -0.923270
+corner difference: -0.923270, -2.023645
+corner difference: -2.023645, 2.726650
+world frame pose: 0.856577, 1.428385
+---------------------------Frame---------------------------
+corner 0 angle: 0.091084
+corner 1 angle: 0.104174
+corner 2 angle: 2.677171
+corner 3 angle: 3.968715
+One corner two maxs!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.650992
+corner 1 angle: 3.985350
+corner 2 angle: 6.163740
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.417515
+corner 1 angle: 3.874358
+corner 2 angle: 5.085454
+corner 3 angle: 5.294893
+Dist 0 = 0.178771
+Dist 1 = 1.347535
+Dist 2 = 1.564505
+Dist 3 = 0.798986
+corner difference: 2.754445, -0.702398
+corner difference: -0.702398, -1.913493
+corner difference: -1.913493, -2.122932
+corner difference: -2.122932, 2.754445
+world frame pose: 0.798986, 1.564505
+---------------------------Frame---------------------------
+corner 0 angle: 0.449150
+corner 1 angle: 0.641681
+corner 2 angle: 2.778346
+corner 3 angle: 2.981241
+corner 4 angle: 2.992149
+corner 5 angle: 3.958898
+corner 6 angle: 5.066364
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.246059
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.627500
+corner 1 angle: 1.195278
+corner 2 angle: 2.971696
+corner 3 angle: 3.869450
+corner 4 angle: 5.318073
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.134172
+corner 1 angle: 1.909772
+corner 2 angle: 2.262110
+corner 3 angle: 4.364687
+corner 4 angle: 5.406976
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.263163
+corner 1 angle: 3.536746
+corner 2 angle: 4.359778
+corner 3 angle: 5.444336
+Dist 0 = 0.054338
+Dist 1 = 0.541631
+Dist 2 = 1.386339
+Dist 3 = 1.359486
+corner difference: -1.838472, 1.171131
+corner difference: 1.171131, 0.348098
+corner difference: 0.348098, -0.736459
+corner difference: -0.736459, -1.838472
+world frame pose: 0.054338, 1.359486
+---------------------------Frame---------------------------
+corner 0 angle: 0.211894
+corner 1 angle: 2.306562
+corner 2 angle: 2.566998
+corner 3 angle: 4.484133
+corner 4 angle: 5.897032
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.229970
+corner 1 angle: 5.364433
+corner 2 angle: 6.159649
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.050451
+corner 1 angle: 0.268890
+corner 2 angle: 2.465005
+corner 3 angle: 4.151429
+corner 4 angle: 5.337162
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.629778
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.255254
+corner 1 angle: 2.490094
+corner 2 angle: 4.048619
+corner 3 angle: 5.060364
+Dist 0 = 0.467949
+Dist 1 = 0.868432
+Dist 2 = 1.456301
+Dist 3 = 0.977887
+corner difference: -1.873453, 2.174892
+corner difference: 2.174892, 0.616368
+corner difference: 0.616368, -0.395378
+corner difference: -0.395378, -1.873453
+world frame pose: 0.467949, 0.977887
+---------------------------Frame---------------------------
+corner 0 angle: 0.610865
+corner 1 angle: 4.139157
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.289343
+corner 1 angle: 2.466641
+corner 2 angle: 4.092525
+corner 3 angle: 5.239261
+Dist 0 = 0.498214
+Dist 1 = 0.790479
+Dist 2 = 1.437904
+Dist 3 = 1.148249
+corner difference: -1.874805, 2.231082
+corner difference: 2.231082, 0.605199
+corner difference: 0.605199, -0.541537
+corner difference: -0.541537, -1.874805
+world frame pose: 0.498214, 1.148249
+---------------------------Frame---------------------------
+corner 0 angle: 0.341703
+corner 1 angle: 2.685080
+corner 2 angle: 2.792799
+corner 3 angle: 4.028711
+corner 4 angle: 5.175720
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.414243
+corner 1 angle: 5.115724
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.461694
+corner 1 angle: 3.787637
+corner 2 angle: 5.120905
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.674133
+corner 1 angle: 2.750803
+corner 2 angle: 4.008531
+corner 3 angle: 5.125268
+Dist 0 = 0.542730
+Dist 1 = 1.202432
+Dist 2 = 1.435365
+Dist 3 = 0.691412
+corner difference: -2.185160, 2.021356
+corner difference: 2.021356, 0.763628
+corner difference: 0.763628, -0.353110
+corner difference: -0.353110, -2.185160
+world frame pose: 0.542730, 0.691412
+---------------------------Frame---------------------------
+corner 0 angle: 0.580049
+corner 1 angle: 2.828797
+corner 2 angle: 4.016712
+corner 3 angle: 5.119269
+corner 4 angle: 6.174921
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.635409
+corner 1 angle: 2.846250
+corner 2 angle: 4.000895
+corner 3 angle: 5.094998
+corner 4 angle: 6.182011
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.901940
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.675497
+corner 1 angle: 4.500768
+corner 2 angle: 5.087908
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.507275
+corner 1 angle: 4.092252
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.385082
+corner 1 angle: 3.245222
+corner 2 angle: 4.237332
+corner 3 angle: 5.398521
+corner 4 angle: 6.144650
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.780217
+corner 1 angle: 3.223951
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.203459
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.530144
+corner 1 angle: 0.994292
+corner 2 angle: 2.316107
+corner 3 angle: 3.614195
+corner 4 angle: 4.164792
+corner 5 angle: 4.835381
+corner 6 angle: 5.240351
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.179442
+corner 1 angle: 2.253384
+corner 2 angle: 4.360869
+corner 3 angle: 5.465608
+Dist 0 = 0.441592
+Dist 1 = 0.433115
+Dist 2 = 1.445338
+Dist 3 = 1.442385
+corner difference: -0.201464, -2.275406
+corner difference: -2.275406, 1.900294
+corner difference: 1.900294, 0.795555
+corner difference: 0.795555, -0.201464
+world frame pose: 0.433115, 0.441592
+---------------------------Frame---------------------------
+corner 0 angle: 1.925589
+corner 1 angle: 2.338196
+corner 2 angle: 4.254786
+corner 3 angle: 5.382159
+Dist 0 = 0.634471
+Dist 1 = 0.524953
+Dist 2 = 1.445429
+Dist 3 = 0.150334
+corner difference: -1.948475, -2.361082
+corner difference: -2.361082, 2.005513
+corner difference: 2.005513, 0.878140
+corner difference: 0.878140, -1.948475
+world frame pose: 0.524953, 0.634471
+---------------------------Frame---------------------------
+corner 0 angle: 0.247619
+corner 1 angle: 2.358104
+corner 2 angle: 4.238151
+corner 3 angle: 5.375341
+Dist 0 = 0.456714
+Dist 1 = 0.558707
+Dist 2 = 1.449475
+Dist 3 = 1.311338
+corner difference: -0.260729, -2.371214
+corner difference: -2.371214, 2.031924
+corner difference: 2.031924, 0.894734
+corner difference: 0.894734, -0.260729
+world frame pose: 0.558707, 0.456714
+---------------------------Frame---------------------------
+corner 0 angle: 0.260163
+corner 1 angle: 2.409918
+corner 2 angle: 4.220152
+corner 3 angle: 5.367160
+Dist 0 = 0.452188
+Dist 1 = 0.606025
+Dist 2 = 1.438187
+Dist 3 = 1.262627
+corner difference: -0.269580, -2.419335
+corner difference: -2.419335, 2.053617
+corner difference: 2.053617, 0.906608
+corner difference: 0.906608, -0.269580
+world frame pose: 0.606025, 0.452188
+---------------------------Frame---------------------------
+corner 0 angle: 0.239983
+corner 1 angle: 4.493678
+corner 2 angle: 5.656230
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.270526
+corner 1 angle: 2.482186
+corner 2 angle: 4.268148
+corner 3 angle: 5.528058
+Dist 0 = 0.432232
+Dist 1 = 0.633883
+Dist 2 = 1.314680
+Dist 3 = 1.233518
+corner difference: -0.275844, -2.487504
+corner difference: -2.487504, 2.009719
+corner difference: 2.009719, 0.749809
+corner difference: 0.749809, -0.275844
+world frame pose: 0.633883, 0.432232
+---------------------------Frame---------------------------
+corner 0 angle: 2.821979
+corner 1 angle: 4.219334
+corner 2 angle: 5.608234
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.595321
+corner 1 angle: 2.551999
+corner 2 angle: 4.481951
+corner 3 angle: 5.365252
+corner 4 angle: 6.157467
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.392426
+corner 1 angle: 2.897519
+corner 2 angle: 4.291601
+corner 3 angle: 5.917757
+Dist 0 = 0.282049
+Dist 1 = 0.707254
+Dist 2 = 1.108241
+Dist 3 = 1.140180
+corner difference: -0.398891, -2.903984
+corner difference: -2.903984, 1.985120
+corner difference: 1.985120, 0.358964
+corner difference: 0.358964, -0.398891
+world frame pose: 0.707254, 0.282049
+---------------------------Frame---------------------------
+corner 0 angle: 0.523326
+corner 1 angle: 2.540817
+corner 2 angle: 4.128249
+corner 3 angle: 4.355142
+corner 4 angle: 5.346162
+corner 5 angle: 6.145195
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.311159
+corner 1 angle: 2.662173
+corner 2 angle: 5.284530
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.179442
+corner 1 angle: 2.623175
+corner 2 angle: 4.087889
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.352611
+corner 1 angle: 2.809980
+corner 2 angle: 5.223716
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.360792
+corner 1 angle: 5.406430
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.373064
+corner 1 angle: 2.681808
+corner 2 angle: 4.020802
+corner 3 angle: 5.265440
+Dist 0 = 0.410941
+Dist 1 = 1.005921
+Dist 2 = 1.421859
+Dist 3 = 0.896700
+corner difference: -0.384710, -2.693454
+corner difference: -2.693454, 2.250736
+corner difference: 2.250736, 1.006099
+corner difference: 1.006099, -0.384710
+world frame pose: 1.005921, 0.410941
+---------------------------Frame---------------------------
+corner 0 angle: 2.685898
+corner 1 angle: 4.007167
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.334340
+corner 1 angle: 4.039347
+corner 2 angle: 5.244987
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.426788
+corner 1 angle: 3.992986
+corner 2 angle: 5.405612
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.721077
+corner 1 angle: 4.217424
+corner 2 angle: 5.255896
+corner 3 angle: 6.173557
+Dist 0 = 0.986001
+Dist 1 = 1.314367
+Dist 2 = 0.845290
+Dist 3 = 0.153634
+corner difference: -2.711254, 2.075584
+corner difference: 2.075584, 1.037113
+corner difference: 1.037113, 0.119452
+corner difference: 0.119452, -2.711254
+world frame pose: 0.986001, 0.410941
+---------------------------Frame---------------------------
+corner 0 angle: 0.474239
+corner 1 angle: 2.760075
+corner 2 angle: 6.178193
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.341430
+corner 1 angle: 2.947152
+corner 2 angle: 3.964625
+corner 3 angle: 5.090908
+Dist 0 = 0.256026
+Dist 1 = 1.219579
+Dist 2 = 1.489741
+Dist 3 = 0.728833
+corner difference: -0.338044, -2.943767
+corner difference: -2.943767, 2.321946
+corner difference: 2.321946, 1.195663
+corner difference: 1.195663, -0.338044
+world frame pose: 1.219579, 0.256026
+---------------------------Frame---------------------------
+corner 0 angle: 0.520054
+corner 1 angle: 3.884449
+corner 2 angle: 4.975825
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.134172
+corner 1 angle: 2.768528
+corner 2 angle: 3.905992
+corner 3 angle: 5.018912
+Dist 0 = 0.222055
+Dist 1 = 1.269142
+Dist 2 = 1.467827
+Dist 3 = 0.648770
+corner difference: -0.164700, -2.799056
+corner difference: -2.799056, 2.346665
+corner difference: 2.346665, 1.233745
+corner difference: 1.233745, -0.164700
+world frame pose: 1.269142, 0.222055
+---------------------------Frame---------------------------
+corner 0 angle: 3.805363
+corner 1 angle: 5.561328
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.914193
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.084343
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.933789
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.176810
+corner 1 angle: 5.980753
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.914681
+corner 1 angle: 5.622960
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.182188
+corner 1 angle: 2.520092
+corner 2 angle: 2.810525
+corner 3 angle: 2.816798
+corner 4 angle: 3.582834
+corner 5 angle: 4.775657
+corner 6 angle: 5.785222
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.200167
+corner 1 angle: 2.295926
+corner 2 angle: 4.381049
+corner 3 angle: 4.394139
+corner 4 angle: 5.468062
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.439155
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.225529
+corner 1 angle: 2.324833
+corner 2 angle: 4.316417
+corner 3 angle: 5.406157
+Dist 0 = 0.434368
+Dist 1 = 0.473132
+Dist 2 = 1.407027
+Dist 3 = 1.386535
+corner difference: 1.366133, -0.733171
+corner difference: -0.733171, -2.724755
+corner difference: -2.724755, 2.468690
+corner difference: 2.468690, 1.366133
+world frame pose: 1.407027, 0.473132
+---------------------------Frame---------------------------
+corner 0 angle: 0.275435
+corner 1 angle: 2.333287
+corner 2 angle: 5.584236
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.305705
+corner 1 angle: 2.514365
+corner 2 angle: 4.263239
+corner 3 angle: 5.411612
+Dist 0 = 0.445670
+Dist 1 = 0.638944
+Dist 2 = 1.413912
+Dist 3 = 1.315040
+corner difference: 1.298741, -0.909919
+corner difference: -0.909919, -2.658793
+corner difference: -2.658793, 2.476020
+corner difference: 2.476020, 1.298741
+world frame pose: 1.413912, 0.638944
+---------------------------Frame---------------------------
+corner 0 angle: 0.234256
+corner 1 angle: 2.725441
+corner 2 angle: 4.193427
+corner 3 angle: 5.321891
+Dist 0 = 0.299375
+Dist 1 = 0.728474
+Dist 2 = 1.422800
+Dist 3 = 1.124137
+corner difference: 1.360497, -1.130688
+corner difference: -1.130688, -2.598673
+corner difference: -2.598673, 2.556048
+corner difference: 2.556048, 1.360497
+world frame pose: 1.422800, 0.728474
+---------------------------Frame---------------------------
+corner 0 angle: 2.817343
+corner 1 angle: 4.164247
+corner 2 angle: 5.282621
+corner 3 angle: 6.161285
+Dist 0 = 0.810469
+Dist 1 = 1.418338
+Dist 2 = 1.301163
+Dist 3 = 0.104235
+corner difference: -1.237591, -2.584495
+corner difference: -2.584495, 2.580316
+corner difference: 2.580316, 1.701652
+corner difference: 1.701652, -1.237591
+world frame pose: 1.418338, 0.810469
+---------------------------Frame---------------------------
+corner 0 angle: 0.335976
+corner 1 angle: 2.571906
+corner 2 angle: 4.096342
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.585776
+corner 1 angle: 2.630811
+corner 2 angle: 4.033074
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.367065
+corner 1 angle: 2.711805
+corner 2 angle: 4.007440
+corner 3 angle: 4.220697
+corner 4 angle: 5.106179
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.409334
+corner 1 angle: 2.699534
+corner 2 angle: 5.079727
+corner 3 angle: 6.163467
+Dist 0 = 0.429966
+Dist 1 = 0.508790
+Dist 2 = 0.970743
+Dist 3 = 0.923478
+corner difference: 1.140613, -1.149586
+corner difference: -1.149586, 2.753406
+corner difference: 2.753406, 1.669666
+corner difference: 1.669666, 1.140613
+world frame pose: 0.508790, 0.810469
+---------------------------Frame---------------------------
+corner 0 angle: 0.356429
+corner 1 angle: 1.271091
+corner 2 angle: 2.974968
+corner 3 angle: 3.968988
+corner 4 angle: 5.155812
+corner 5 angle: 5.404794
+corner 6 angle: 6.155286
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.435514
+corner 1 angle: 2.737167
+corner 2 angle: 3.919355
+corner 3 angle: 5.030366
+Dist 0 = 0.427098
+Dist 1 = 1.196498
+Dist 2 = 1.446665
+Dist 3 = 0.743153
+corner difference: 1.119624, -1.182029
+corner difference: -1.182029, -2.364217
+corner difference: -2.364217, 2.807957
+corner difference: 2.807957, 1.119624
+world frame pose: 1.446665, 1.196498
+---------------------------Frame---------------------------
+corner 0 angle: 0.449695
+corner 1 angle: 3.912810
+corner 2 angle: 4.995732
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.525780
+corner 1 angle: 2.743440
+corner 2 angle: 2.754348
+corner 3 angle: 3.871086
+corner 4 angle: 4.722479
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.228802
+corner 1 angle: 2.782982
+corner 2 angle: 3.923446
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.506165
+corner 1 angle: 4.457680
+corner 2 angle: 5.606325
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.825214
+corner 1 angle: 2.916336
+corner 2 angle: 3.358395
+corner 3 angle: 5.017276
+corner 4 angle: 5.904122
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.585523
+corner 1 angle: 4.687027
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.830960
+corner 1 angle: 2.297835
+corner 2 angle: 4.350506
+corner 3 angle: 6.036658
+Dist 0 = 0.532996
+Dist 1 = 0.387714
+Dist 2 = 0.965543
+Dist 3 = 0.418782
+corner difference: 1.348859, 0.881984
+corner difference: 0.881984, -1.170687
+corner difference: -1.170687, -2.856839
+corner difference: -2.856839, 1.348859
+world frame pose: 0.418782, 0.965543
+---------------------------Frame---------------------------
+corner 0 angle: 0.441514
+corner 1 angle: 2.283927
+corner 2 angle: 5.485515
+corner 3 angle: 6.264369
+Dist 0 = 0.500431
+Dist 1 = 0.031676
+Dist 2 = 1.524898
+Dist 3 = 0.865137
+corner difference: 2.754682, 0.912269
+corner difference: 0.912269, -2.289320
+corner difference: -2.289320, -3.068173
+corner difference: -3.068173, 2.754682
+world frame pose: 0.865137, 1.524898
+---------------------------Frame---------------------------
+corner 0 angle: 0.084267
+corner 1 angle: 3.471569
+corner 2 angle: 4.339598
+corner 3 angle: 5.557238
+Dist 0 = 0.094580
+Dist 1 = 0.492895
+Dist 2 = 1.285680
+Dist 3 = 1.426360
+corner difference: 3.091282, -0.296020
+corner difference: -0.296020, -1.164049
+corner difference: -1.164049, -2.381689
+corner difference: -2.381689, 3.091282
+world frame pose: 1.426360, 1.285680
+---------------------------Frame---------------------------
+corner 0 angle: 0.284980
+corner 1 angle: 2.377466
+corner 2 angle: 5.463699
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.276798
+corner 1 angle: 4.299782
+corner 2 angle: 5.960299
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.282252
+corner 1 angle: 2.419735
+corner 2 angle: 4.265421
+corner 3 angle: 5.383796
+Dist 0 = 0.500950
+Dist 1 = 0.636980
+Dist 2 = 1.379184
+Dist 3 = 1.288462
+corner difference: 2.884544, 0.747061
+corner difference: 0.747061, -1.098625
+corner difference: -1.098625, -2.216999
+corner difference: -2.216999, 2.884544
+world frame pose: 1.288462, 1.379184
+---------------------------Frame---------------------------
+corner 0 angle: 0.290161
+corner 1 angle: 2.571088
+corner 2 angle: 4.509495
+corner 3 angle: 4.531311
+corner 4 angle: 5.395522
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.694352
+corner 1 angle: 4.310691
+corner 2 angle: 5.692501
+corner 3 angle: 6.156922
+Dist 0 = 0.747042
+Dist 1 = 1.241054
+Dist 2 = 1.331107
+Dist 3 = 0.173514
+corner difference: 0.463376, -1.152962
+corner difference: -1.152962, -2.534772
+corner difference: -2.534772, -2.999194
+corner difference: -2.999194, 0.463376
+world frame pose: 0.173514, 1.331107
+---------------------------Frame---------------------------
+corner 0 angle: 0.291525
+corner 1 angle: 0.468785
+corner 2 angle: 2.491730
+corner 3 angle: 5.297620
+corner 4 angle: 6.159649
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.300524
+corner 1 angle: 5.601417
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.319886
+corner 1 angle: 2.590178
+corner 2 angle: 4.081344
+corner 3 angle: 5.223989
+corner 4 angle: 6.154740
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.577906
+corner 1 angle: 4.123886
+corner 2 angle: 5.265168
+corner 3 angle: 6.157467
+Dist 0 = 0.803766
+Dist 1 = 1.393511
+Dist 2 = 1.407145
+Dist 3 = 0.244573
+corner difference: 0.534920, -1.011060
+corner difference: -1.011060, -2.152342
+corner difference: -2.152342, -3.044641
+corner difference: -3.044641, 0.534920
+world frame pose: 0.244573, 1.407145
+---------------------------Frame---------------------------
+corner 0 angle: 0.340339
+corner 1 angle: 4.057618
+corner 2 angle: 5.395795
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.574322
+corner 1 angle: 2.648810
+corner 2 angle: 3.901084
+corner 3 angle: 5.047820
+Dist 0 = 0.548353
+Dist 1 = 1.257744
+Dist 2 = 1.419283
+Dist 3 = 0.689417
+corner difference: 2.503330, 0.428842
+corner difference: 0.428842, -0.823432
+corner difference: -0.823432, -1.970168
+corner difference: -1.970168, 2.503330
+world frame pose: 0.689417, 1.419283
+---------------------------Frame---------------------------
+corner 0 angle: 0.371701
+corner 1 angle: 2.667627
+corner 2 angle: 3.881176
+corner 3 angle: 4.963007
+Dist 0 = 0.419393
+Dist 1 = 1.324549
+Dist 2 = 1.439572
+Dist 3 = 0.672057
+corner difference: 2.719383, 0.423456
+corner difference: 0.423456, -0.790093
+corner difference: -0.790093, -1.871924
+corner difference: -1.871924, 2.719383
+world frame pose: 0.672057, 1.439572
+---------------------------Frame---------------------------
+corner 0 angle: 0.474784
+corner 1 angle: 2.701988
+corner 2 angle: 3.878994
+corner 3 angle: 4.975007
+Dist 0 = 0.411202
+Dist 1 = 1.379055
+Dist 2 = 1.447454
+Dist 3 = 0.574052
+corner difference: 2.626508, 0.399304
+corner difference: 0.399304, -0.777702
+corner difference: -0.777702, -1.873714
+corner difference: -1.873714, 2.626508
+world frame pose: 0.574052, 1.447454
+---------------------------Frame---------------------------
+corner 0 angle: 0.187896
+corner 1 angle: 0.397608
+corner 2 angle: 1.288544
+corner 3 angle: 2.628084
+corner 4 angle: 3.917174
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 3.688372
+corner 1 angle: 6.168648
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.514872
+corner 1 angle: 2.761984
+corner 2 angle: 4.094979
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.606502
+corner 1 angle: 4.342597
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 1.185460
+corner 1 angle: 1.611430
+corner 2 angle: 2.006583
+corner 3 angle: 3.241404
+corner 4 angle: 4.240878
+corner 5 angle: 4.394139
+corner 6 angle: 4.825836
+corner 7 angle: 5.359252
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.526599
+corner 1 angle: 2.232113
+corner 2 angle: 2.727077
+corner 3 angle: 3.631649
+corner 4 angle: 4.049709
+corner 5 angle: 5.481152
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.439428
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.156027
+corner 1 angle: 4.360323
+corner 2 angle: 5.955663
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.343377
+corner 1 angle: 4.303055
+corner 2 angle: 5.411067
+corner 3 angle: 6.143286
+Dist 0 = 0.574753
+Dist 1 = 1.507365
+Dist 2 = 1.444681
+Dist 3 = 0.325239
+corner difference: 2.388772, 0.429094
+corner difference: 0.429094, -0.678918
+corner difference: -0.678918, -1.411137
+corner difference: -1.411137, 2.388772
+world frame pose: 0.325239, 1.444681
+---------------------------Frame---------------------------
+corner 0 angle: 0.262345
+corner 1 angle: 2.271110
+corner 2 angle: 4.262694
+corner 3 angle: 5.394431
+Dist 0 = 0.460868
+Dist 1 = 0.487115
+Dist 2 = 1.486862
+Dist 3 = 1.304832
+corner difference: -1.824802, 2.449619
+corner difference: 2.449619, 0.458035
+corner difference: 0.458035, -0.673703
+corner difference: -0.673703, -1.824802
+world frame pose: 0.460868, 1.304832
+---------------------------Frame---------------------------
+corner 0 angle: 0.180260
+corner 1 angle: 0.191168
+corner 2 angle: 4.204607
+corner 3 angle: 5.512786
+One corner two maxs!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.441825
+corner 1 angle: 5.424974
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.268617
+corner 1 angle: 2.462823
+corner 2 angle: 4.211425
+corner 3 angle: 5.300620
+Dist 0 = 0.480817
+Dist 1 = 0.736380
+Dist 2 = 1.499181
+Dist 3 = 1.174143
+corner difference: -1.838893, 2.250086
+corner difference: 2.250086, 0.501484
+corner difference: 0.501484, -0.587710
+corner difference: -0.587710, -1.838893
+world frame pose: 0.480817, 1.174143
+---------------------------Frame---------------------------
+corner 0 angle: 4.478133
+corner 1 angle: 5.876306
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.268890
+corner 1 angle: 3.137502
+corner 2 angle: 4.214698
+corner 3 angle: 5.293802
+Dist 0 = 0.132281
+Dist 1 = 0.807545
+Dist 2 = 1.401604
+Dist 3 = 1.131720
+corner difference: -1.838903, 1.575670
+corner difference: 1.575670, 0.498474
+corner difference: 0.498474, -0.580630
+corner difference: -0.580630, -1.838903
+world frame pose: 0.132281, 1.131720
+---------------------------Frame---------------------------
+corner 0 angle: 2.530727
+corner 1 angle: 4.118705
+corner 2 angle: 4.436136
+corner 3 angle: 5.602780
+corner 4 angle: 6.134287
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.285798
+corner 1 angle: 2.549272
+corner 2 angle: 4.097160
+corner 3 angle: 5.345344
+Dist 0 = 0.460698
+Dist 1 = 0.866710
+Dist 2 = 1.317778
+Dist 3 = 1.086164
+corner difference: -1.857779, 2.161933
+corner difference: 2.161933, 0.614044
+corner difference: 0.614044, -0.634139
+corner difference: -0.634139, -1.857779
+world frame pose: 0.460698, 1.086164
+---------------------------Frame---------------------------
+corner 0 angle: 0.289616
+corner 1 angle: 4.443772
+corner 2 angle: 5.244987
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.304342
+corner 1 angle: 0.617683
+corner 2 angle: 2.581724
+corner 3 angle: 5.227534
+corner 4 angle: 6.160739
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.523948
+corner 1 angle: 5.165357
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.061905
+corner 1 angle: 0.072813
+corner 2 angle: 4.003894
+corner 3 angle: 4.998459
+One corner two maxs!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.329431
+corner 1 angle: 2.899428
+corner 2 angle: 5.367160
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.589321
+corner 1 angle: 2.700079
+corner 2 angle: 4.373686
+corner 3 angle: 5.097998
+Dist 0 = 0.513003
+Dist 1 = 0.886620
+Dist 2 = 1.434638
+Dist 3 = 0.722708
+corner difference: -2.167254, 2.005174
+corner difference: 2.005174, 0.331567
+corner difference: 0.331567, -0.392745
+corner difference: -0.392745, -2.167254
+world frame pose: 0.513003, 0.722708
+---------------------------Frame---------------------------
+corner 0 angle: 0.384245
+corner 1 angle: 2.671717
+corner 2 angle: 3.948807
+corner 3 angle: 3.959988
+corner 4 angle: 5.066637
+corner 5 angle: 5.077545
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 2.692716
+corner 1 angle: 3.933536
+corner 2 angle: 5.050001
+corner 3 angle: 6.164285
+Dist 0 = 1.216041
+Dist 1 = 1.465726
+Dist 2 = 0.982935
+Dist 3 = 0.185645
+corner difference: 2.007632, 0.766812
+corner difference: 0.766812, -0.349654
+corner difference: -0.349654, -1.463937
+corner difference: -1.463937, 2.007632
+world frame pose: 0.185645, 0.982935
+---------------------------Frame---------------------------
+corner 0 angle: 0.423788
+corner 1 angle: 2.839160
+corner 2 angle: 3.912810
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.449422
+corner 1 angle: 2.716714
+corner 2 angle: 4.302510
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.571050
+corner 1 angle: 2.759257
+corner 2 angle: 3.878722
+corner 3 angle: 3.918810
+corner 4 angle: 5.204354
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.769581
+corner 1 angle: 3.198589
+corner 2 angle: 4.402593
+corner 3 angle: 5.576055
+Dist 0 = 0.299666
+Dist 1 = 1.382371
+Dist 2 = 1.412127
+Dist 3 = 0.585437
+corner difference: -1.643910, 2.210268
+corner difference: 2.210268, 1.006264
+corner difference: 1.006264, -0.167198
+corner difference: -0.167198, -1.643910
+world frame pose: 0.299666, 0.585437
+---------------------------Frame---------------------------
+corner 0 angle: 0.164170
+corner 1 angle: 1.470985
+corner 2 angle: 3.874904
+corner 3 angle: 4.310963
+corner 4 angle: 5.068818
+corner 5 angle: 5.425520
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.222530
+corner 1 angle: 4.351051
+corner 2 angle: 5.452245
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 4.351051
+corner 1 angle: 5.145994
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.398699
+corner 1 angle: 1.017200
+corner 2 angle: 2.275746
+corner 3 angle: 3.268402
+corner 4 angle: 3.947171
+corner 5 angle: 5.316164
+corner 6 angle: 6.074018
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 5.450336
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.236438
+corner 1 angle: 2.203478
+corner 2 angle: 5.156630
+Incorrect number of corners!!
+---------------------------Frame---------------------------
+corner 0 angle: 0.230438
+corner 1 angle: 0.241619
+corner 2 angle: 2.201024
+corner 3 angle: 5.288348
+One corner two maxs!!

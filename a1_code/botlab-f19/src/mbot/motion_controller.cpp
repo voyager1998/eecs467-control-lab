@@ -19,17 +19,20 @@
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/timestamp_t.hpp>
+#include <lcmtypes/turn_xy_t.hpp>
 
 #define STOPTIME 100
 #define PI 3.14159265358979323846
+#define DESEIREDDIST 0.5
+#define K1 0.5
+#define K2 0.1
+
 class MotionController {
 public:
     /**
     * Constructor for MotionController.
     */
     MotionController(lcm::LCM *instance) : state_(State::DRIVE),
-                                           wallfollower_k1(0.0),
-                                           wallfollower_k2(sqrt(4 * wallfollower_k1)),
                                            keep_heading(0.0f),
                                            lcmInstance(instance) {
         time_offset = 0;
@@ -119,6 +122,44 @@ public:
         return cmd;
     }
 
+    mbot_motor_command_t updateCommandLidar(void) {
+        mbot_motor_command_t cmd;
+        cmd.trans_v = 0.0f;
+        cmd.angular_v = 0.0f;
+        cmd.utime = now();
+
+        if (state_ == TURN) {
+            cmd.trans_v = 0.0f;
+            if (back_wall_dist < DESEIREDDIST + 0.1 && front_wall_dist > 2 - DESEIREDDIST - 0.1) {
+                cmd.angular_v = 0.0f;
+                state_ = DRIVE;
+
+                turn_xy_t cmd;
+                cmd.x = cur_pos.x;
+                cmd.y = cur_pos.y;
+                lcmInstance->publish(MBOT_TURN_CHANNEL, &cmd);
+            } else {
+                cmd.angular_v = -0.5f;
+                printf("Turning, angular velocity: %f\n", cmd.angular_v);
+            }
+        } else if (state_ == DRIVE) {
+            if (front_wall_dist < DESEIREDDIST + 0.1) {
+                cmd.trans_v = 0.0f;
+                cmd.angular_v = 0.0f;
+                state_ = TURN;
+            } else {
+                // cmd.trans_v = 0.2f;
+                cmd.trans_v = std::min(1.2 * front_wall_dist + 0.05, 0.1);
+                cmd.angular_v = -(-K1 * theta_rightwall - K2 / cmd.trans_v * (right_wall_dist - DESEIREDDIST));
+                printf("angular velocity: %f\n", cmd.angular_v);
+            }
+        } else {
+            std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
+        }
+
+        return cmd;
+    }
+
     bool timesync_initialized() { return timesync_initialized_; }
 
     void handleTimesync(const lcm::ReceiveBuffer *buf, const std::string &channel, const timestamp_t *timesync) {
@@ -165,76 +206,45 @@ public:
     }
 
     void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
-        int len = newLidar->num_ranges;
+        int count = newLidar->num_ranges;
+        std::vector<float> right_wall;  //(75~105)
+        std::vector<float> front_wall;  //(0~15) U (345~360)
+        std::vector<float> back_wall;   //(165~195)
 
-        /**
-         * ZHIHAO RUAN:
-         * 
-         * Assume that the walls are a perfect rectangle 
-         * 
-         * Each center direction [0, PI/2, PI, 3*PI/2] takes PI/12 data on the left 
-         * and PI/12 data on the right, which is PI/6 data in total centered at the 
-         * directions [0, PI/2, PI, 3*PI/2]
-         */
-
-        const int span = 20;
-
-        std::vector<float> right_wall_dist;
-        std::vector<float> right_wall_theta;
-        std::vector<float> back_wall_dist;
-        std::vector<float> back_wall_theta;
-        std::vector<float> front_wall_dist;
-        std::vector<float> front_wall_theta;
-
-        // construct right wall data
-        for (int i = len / 4 - span; i < len / 4 + span; ++i) {
-            float range = *(newLidar->ranges.begin() + i);
-            float theta = *(newLidar->thetas.begin() + i);
-            if (range != 0) {
-                right_wall_dist.push_back(range);
-                right_wall_theta.push_back(theta);
+        int index_right_dist = 0;
+        float dist_to_right = 5.0f;
+        for (int i = 0; i < count; i++) {
+            if (newLidar->thetas[i] > 75.0 / 180.0 * M_PI && newLidar->thetas[i] < 105.0 / 180.0 * M_PI) {
+                if (newLidar->ranges[i] > 0.2) {
+                    right_wall.push_back(newLidar->ranges[i]);
+                    if (newLidar->ranges[i] < dist_to_right) {
+                        dist_to_right = newLidar->ranges[i];
+                        index_right_dist = i;
+                    }
+                }
+            } else if ((newLidar->thetas[i] > 0 && newLidar->thetas[i] < 15.0 / 180.0 * M_PI) || (newLidar->thetas[i] > 345.0 / 180.0 * M_PI && newLidar->thetas[i] < 2 * M_PI)) {
+                if (newLidar->ranges[i] > 0.2) {
+                    front_wall.push_back(newLidar->ranges[i]);
+                }
+            } else if (newLidar->thetas[i] > 165.0 / 180.0 * M_PI && newLidar->thetas[i] < 195.0 / 180.0 * M_PI) {
+                if (newLidar->ranges[i] > 0.2) {
+                    back_wall.push_back(newLidar->ranges[i]);
+                }
             }
         }
+        // float dist_to_right = *std::min_element(right_wall.begin(), right_wall.end());
+        float dist_to_front = *std::min_element(front_wall.begin(), front_wall.end());
+        float dist_to_back = *std::min_element(back_wall.begin(), back_wall.end());
 
-        // construct back wall data
-        for (int i = len / 2 - span; i < len / 2 + span; ++i) {
-            float range = *(newLidar->ranges.begin() + i);
-            float theta = *(newLidar->thetas.begin() + i);
-            if (range != 0) {
-                back_wall_dist.push_back(range);
-                back_wall_theta.push_back(theta);
-            }
-        }
+        printf("distance to right wall: %f\n", dist_to_right);
+        printf("distance to front wall: %f\n", dist_to_front);
 
-        // construct front wall data
-        for (int i = span + 1; i > 0; --i) {
-            float range = *(newLidar->ranges.end() - i);
-            float theta = *(newLidar->thetas.end() - i);
-            if (range != 0) {
-                front_wall_dist.push_back(range);
-                front_wall_theta.push_back(theta);
-            }
-        }
-        for (int i = 0; i < span; ++i) {
-            float range = *(newLidar->ranges.begin() + i);
-            float theta = *(newLidar->thetas.begin() + i);
-            if (range != 0) {
-                front_wall_dist.push_back(range);
-                front_wall_theta.push_back(theta);
-            }
-        }
-
-        // use minumum value as the distance to the walls
-        int idx_dist_right = std::min_element(right_wall_dist.begin(), right_wall_dist.end()) - right_wall_dist.begin();
-        int idx_dist_back = std::min_element(back_wall_dist.begin(), back_wall_dist.end()) - back_wall_dist.begin();
-        int idx_dist_front = std::min_element(front_wall_dist.begin(), front_wall_dist.end()) - front_wall_dist.begin();
-
-        cur_wf_pos.x = back_wall_dist[idx_dist_back];
-        cur_wf_pos.y = right_wall_dist[idx_dist_right];
-        cur_wf_pos.theta = *(newLidar->thetas.begin() + len / 4) - right_wall_theta[idx_dist_right];
-
-        lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
-    }
+        right_wall_dist = dist_to_right;
+        front_wall_dist = dist_to_front;
+        back_wall_dist = dist_to_back;
+        theta_rightwall = newLidar->thetas[index_right_dist] - M_PI_2;
+        // lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
+    }  //only concentrate on small ranges in the forward direction and right direction
 
     /**
      * ZHIHAO RUAN:
@@ -303,9 +313,11 @@ private:
     pose_xyt_t cur_pos;
     pose_xyt_t cur_wf_pos;
     curr_state_t cur_state;
-    float wallfollower_k1;
-    float wallfollower_k2;
     float keep_heading = 0.0f;  // The heading to keep when driving straight
+    float right_wall_dist;
+    float front_wall_dist;
+    float back_wall_dist;
+    float theta_rightwall;  // counter-clock wise, when perpendicular to right wall: 0
 
     int64_t time_offset;
     bool timesync_initialized_;
@@ -330,14 +342,14 @@ int main(int argc, char **argv) {
     // For instance, instantaneous translational and rotational velocity of the robot, which is necessary
     // for your feedback controller.
     lcmInstance.subscribe(MBOT_STATE_CHANNEL, &MotionController::handleState, &controller);
-    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR, &controller);
+    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR2, &controller);
 
     signal(SIGINT, exit);
 
     while (true) {
         lcmInstance.handleTimeout(20);  // update at 50Hz minimum
         if (controller.timesync_initialized()) {
-            mbot_motor_command_t cmd = controller.updateCommand();
+            mbot_motor_command_t cmd = controller.updateCommandLidar();
             lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
         }
     }
