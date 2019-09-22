@@ -33,6 +33,7 @@ public:
     * Constructor for MotionController.
     */
     MotionController(lcm::LCM *instance) : state_(State::DRIVE),
+                                           drive_stage(LidarSquare::BOTTOM),
                                            keep_heading(0.0f),
                                            lcmInstance(instance) {
         time_offset = 0;
@@ -138,6 +139,8 @@ public:
                 cmd.x = cur_pos.x;
                 cmd.y = cur_pos.y;
                 lcmInstance->publish(MBOT_TURN_CHANNEL, &cmd);
+
+                drive_stage = (LidarSquare)((int)drive_stage + 1);
             } else {
                 cmd.angular_v = -0.5f;
                 printf("Turning, angular velocity: %f\n", cmd.angular_v);
@@ -213,6 +216,8 @@ public:
         std::vector<float> front_wall_thetas;
         std::vector<float> back_wall;  //(165~195)
         std::vector<float> back_wall_thetas;
+        std::vector<float> left_wall;  //(255~285)
+        std::vector<float> left_wall_thetas;
 
         // index of distance to the right wall in newLidar array
         int index_right_dist = 0;
@@ -237,10 +242,16 @@ public:
                     back_wall.push_back(newLidar->ranges[i]);
                     back_wall_thetas.push_back(newLidar->thetas[i]);
                 }
+            } else if (newLidar->thetas[i] > 255.0 / 180.0 * M_PI && newLidar->thetas[i] < 285.0 / 180.0 * M_PI) {
+                if (newLidar->ranges[i] > 0.2) {
+                    left_wall.push_back(newLidar->ranges[i]);
+                    left_wall_thetas.push_back(newLidar->thetas[i]);
+                }
             }
         }
         float dist_to_front = *std::min_element(front_wall.begin(), front_wall.end());
         float dist_to_back = *std::min_element(back_wall.begin(), back_wall.end());
+        float dist_to_left = *std::min_element(left_wall.begin(), left_wall.end());
 
         printf("distance to right wall: %f\n", dist_to_right);
         printf("distance to front wall: %f\n", dist_to_front);
@@ -248,8 +259,36 @@ public:
         right_wall_dist = dist_to_right;
         front_wall_dist = dist_to_front;
         back_wall_dist = dist_to_back;
+        left_wall_dist = dist_to_left;
         theta_rightwall = newLidar->thetas[index_right_dist] - M_PI_2;
-        // lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
+
+        // calculate the world frame pose
+        // only searches for 0-120 degrees for the minimum element
+        auto it_rightwall_dist = std::min_element(newLidar->ranges.begin(), newLidar->ranges.begin() + (int)(count / 3));
+
+        switch (drive_stage) {
+            case LidarSquare::BOTTOM:
+                cur_wf_pos.x = back_wall_dist;
+                cur_wf_pos.y = right_wall_dist;
+                break;
+            case LidarSquare::RIGHT:
+                cur_wf_pos.x = left_wall_dist;
+                cur_wf_pos.y = back_wall_dist;
+                break;
+            case LidarSquare::TOP:
+                cur_wf_pos.x = front_wall_dist;
+                cur_wf_pos.y = left_wall_dist;
+                break;
+            case LidarSquare::LEFT:
+                cur_wf_pos.x = right_wall_dist;
+                cur_wf_pos.y = front_wall_dist;
+                break;
+            default:
+                break;
+        }
+
+        cur_wf_pos.theta = theta_rightwall;
+        lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
     }  //only concentrate on small ranges in the forward direction and right direction
 
     /**
@@ -306,7 +345,14 @@ public:
 private:
     enum State {
         TURN,
-        DRIVE,
+        DRIVE
+    };
+
+    enum LidarSquare {
+        BOTTOM = 0,
+        RIGHT,
+        TOP,
+        LEFT
     };
 
     std::vector<pose_xyt_t> targets_;
@@ -319,7 +365,9 @@ private:
     pose_xyt_t cur_pos;
     pose_xyt_t cur_wf_pos;
     curr_state_t cur_state;
+    LidarSquare drive_stage;
     float keep_heading = 0.0f;  // The heading to keep when driving straight
+    float left_wall_dist;
     float right_wall_dist;
     float front_wall_dist;
     float back_wall_dist;
@@ -348,7 +396,7 @@ int main(int argc, char **argv) {
     // For instance, instantaneous translational and rotational velocity of the robot, which is necessary
     // for your feedback controller.
     lcmInstance.subscribe(MBOT_STATE_CHANNEL, &MotionController::handleState, &controller);
-    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR2, &controller);
+    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR, &controller);
 
     signal(SIGINT, exit);
 
