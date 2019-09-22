@@ -19,6 +19,7 @@
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/timestamp_t.hpp>
+#include <lcmtypes/turn_xy_t.hpp>
 
 #define STOPTIME 100
 #define PI 3.14159265358979323846
@@ -132,47 +133,23 @@ public:
             if (back_wall_dist < DESEIREDDIST + 0.1 && front_wall_dist > 2 - DESEIREDDIST - 0.1) {
                 cmd.angular_v = 0.0f;
                 state_ = DRIVE;
+
+                turn_xy_t cmd;
+                cmd.x = cur_pos.x;
+                cmd.y = cur_pos.y;
+                lcmInstance->publish(MBOT_TURN_CHANNEL, &cmd);
             } else {
                 cmd.angular_v = -0.5f;
                 printf("Turning, angular velocity: %f\n", cmd.angular_v);
             }
-            // float diff = 0.0;
-            // if (cur_pos.theta - pose_target.theta < -M_PI) {
-            //     diff = pose_target.theta - (cur_pos.theta + 2 * M_PI);
-            // } else if (cur_pos.theta - pose_target.theta > M_PI) {
-            //     diff = pose_target.theta + 2 * M_PI - cur_pos.theta;
-            // } else {
-            //     diff = pose_target.theta - cur_pos.theta;
-            // }
-
-            // if (fabs(diff) <= 0.1) {
-            //     keep_heading = pose_target.theta;
-            //     state_ = DRIVE;
-            //     targets_.pop_back();
-            // } else {
-            //     if (diff > 0) {
-            //         cmd.angular_v = -1 * (diff + 0.1);
-            //     } else {
-            //         cmd.angular_v = -1 * (diff - 0.1);
-            //     }
-            // }
         } else if (state_ == DRIVE) {
             if (front_wall_dist < DESEIREDDIST + 0.1) {
                 cmd.trans_v = 0.0f;
                 cmd.angular_v = 0.0f;
                 state_ = TURN;
             } else {
-                // float debug_trans_v = std::min(1.2 * diff + 0.05, 0.1);  //0.1f;
-                // float ang_diff = 0.0;
-                // float dir = atan2((pose_target.y - cur_pos.y), (pose_target.x - cur_pos.x));
-                // if (cur_pos.theta - dir < -M_PI) {
-                //     ang_diff = dir - (cur_pos.theta + 2 * M_PI);
-                // } else if (cur_pos.theta - dir > M_PI) {
-                //     ang_diff = dir + 2 * M_PI - cur_pos.theta;
-                // } else {
-                //     ang_diff = dir - cur_pos.theta;
-                // }
-                cmd.trans_v = 0.2f;
+                // cmd.trans_v = 0.2f;
+                cmd.trans_v = std::min(1.2 * front_wall_dist + 0.05, 0.1);
                 cmd.angular_v = -(-K1 * theta_rightwall - K2 / cmd.trans_v * (right_wall_dist - DESEIREDDIST));
                 printf("angular velocity: %f\n", cmd.angular_v);
             }

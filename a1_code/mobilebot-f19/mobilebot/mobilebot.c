@@ -240,7 +240,7 @@ void publish_mb_msgs() {
     if (mb_state.turn_velocity > 1 || mb_state.turn_velocity < -1) {
         turn_msg.x = mb_odometry.x;
         turn_msg.y = mb_odometry.y;
-        turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
+        // turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
     }
     curr_state_t_publish(lcm, MBOT_STATE_CHANNEL, &state_msg);
 }
