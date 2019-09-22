@@ -18,6 +18,8 @@
 #include <planning/motion_planner.hpp>
 #include <sstream>
 
+#define TASK_6_A1
+
 void clear_traces_pressed(GtkWidget* button, gpointer gui);
 void reset_state_pressed(GtkWidget* button, gpointer gui);
 
@@ -187,6 +189,7 @@ void BotGui::onDisplayStart(vx_display_t* display) {
     lcmInstance_->subscribe(".*ODOMETRY", &BotGui::handleOdometry, this);  // NOTE: Subscribe to all channels with odometry in the name
     lcmInstance_->subscribe(EXPLORATION_STATUS_CHANNEL, &BotGui::handleExplorationStatus, this);
     lcmInstance_->subscribe(MBOT_TURN_CHANNEL, &BotGui::handleTurn, this);
+    lcmInstance_->subscribe(LIDAR_POSE_CHANNEL, &BotGui::handlePose, this);
 }
 
 void BotGui::render(void) {
@@ -221,7 +224,11 @@ void BotGui::render(void) {
     // Draw laser if requested
     vx_buffer_t* laserBuf = vx_world_get_buffer(world_, "laser");
     if (haveLaser_ && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(showLaserCheck_))) {
+#ifndef TASK_6_A1
         draw_laser_scan(laser_, slamPose_, vx_green, laserBuf);
+#else
+        draw_laser_scan(laser_, cur_wf_pos, vx_green, laserBuf);
+#endif
     }
     vx_buffer_swap(laserBuf);
 
@@ -296,6 +303,9 @@ void BotGui::handlePose(const lcm::ReceiveBuffer* rbuf, const std::string& chann
 
     if (channel == SLAM_POSE_CHANNEL) {
         slamPose_ = *pose;
+    } else if (channel == LIDAR_POSE_CHANNEL) {
+        cur_wf_pos = *pose;
+        cur_wf_pos.theta = odometry_.theta;
     }
 }
 
@@ -337,9 +347,6 @@ void BotGui::handleTurn(const lcm::ReceiveBuffer* rbuf, const std::string& chann
     temp.x = turn->x;
     temp.y = turn->y;
     turning_.push_back(temp);
-
-    std::cout << "Turn message received at: " << turn->x << ", " << turn->y << std::endl;
-
 }
 
 void BotGui::handleExplorationStatus(const lcm::ReceiveBuffer* rbuf,

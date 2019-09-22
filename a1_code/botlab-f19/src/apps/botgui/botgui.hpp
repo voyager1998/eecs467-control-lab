@@ -98,6 +98,7 @@ private:
 
     // >>> ZHIHAO RUAN: self-defined variable starts here!
     std::vector<turn_xy_t> turning_;
+    pose_xyt_t cur_wf_pos;
 
     // Widgets w/variable input/output
     GtkWidget* showMapCheck_;                         // Checkbox indicating if the map should be drawn

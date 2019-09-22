@@ -165,87 +165,75 @@ public:
     }
 
     void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
-        int count = newLidar->num_ranges;
-        std::vector<int> corners;
-        int compare_num = 20;
-        for (int i = 0; i < count; i++) {
-            int flag = 0;  // 0 for it is local max
-            if (i < compare_num) {
-                for (int j = arrayWrap(i - compare_num, count); j < count; j++) {
-                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                        flag = 1;
-                        break;
-                    }
-                }
-                if (flag == 0) {
-                    for (int j = 0; j < i + compare_num; j++) {
-                        if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                            flag = 1;
-                            break;
-                        }
-                    }
-                }
-            } else if (i > count - compare_num) {
-                for (int j = arrayWrap(i - compare_num, count); j < count; j++) {
-                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                        flag = 1;
-                        break;
-                    }
-                }
-                if (flag == 0) {
-                    for (int j = 0; j < arrayWrap(i + compare_num, count); j++) {
-                        if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                            flag = 1;
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (int j = i - compare_num; j < i + compare_num; j++) {
-                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                        flag = 1;
-                        break;
-                    }
-                }
-            }
-            if (flag == 0) {
-                corners.push_back(i);
+        int len = newLidar->num_ranges;
+
+        /**
+         * ZHIHAO RUAN:
+         * 
+         * Assume that the walls are a perfect rectangle 
+         * 
+         * Each center direction [0, PI/2, PI, 3*PI/2] takes PI/12 data on the left 
+         * and PI/12 data on the right, which is PI/6 data in total centered at the 
+         * directions [0, PI/2, PI, 3*PI/2]
+         */
+
+        const int span = 20;
+
+        std::vector<float> right_wall_dist;
+        std::vector<float> right_wall_theta;
+        std::vector<float> back_wall_dist;
+        std::vector<float> back_wall_theta;
+        std::vector<float> front_wall_dist;
+        std::vector<float> front_wall_theta;
+
+        // construct right wall data
+        for (int i = len / 4 - span; i < len / 4 + span; ++i) {
+            float range = *(newLidar->ranges.begin() + i);
+            float theta = *(newLidar->thetas.begin() + i);
+            if (range != 0) {
+                right_wall_dist.push_back(range);
+                right_wall_theta.push_back(theta);
             }
         }
-        printf("---------------------------Frame---------------------------\n");
-        for (size_t i = 0; i < corners.size(); i++) {
-            printf("corner %d angle: %f\n", i, newLidar->thetas[corners[i]]);
+
+        // construct back wall data
+        for (int i = len / 2 - span; i < len / 2 + span; ++i) {
+            float range = *(newLidar->ranges.begin() + i);
+            float theta = *(newLidar->thetas.begin() + i);
+            if (range != 0) {
+                back_wall_dist.push_back(range);
+                back_wall_theta.push_back(theta);
+            }
         }
-        std::vector<float> dist_to_wall;
-        if (corners.size() > 4 || corners.size() < 4) {
-            printf("Incorrect number of corners!!\n");
-            return;
-        } else {
-            for (int i = 0; i < 4; i++) {
-                if (fabs(fmod(newLidar->thetas[corners[arrayWrap(i + 1, 4)]] - newLidar->thetas[corners[i]], 2 * M_PI)) < 0.1) {
-                    printf("One corner two maxs!!\n");
-                    return;
-                }
+
+        // construct front wall data
+        for (int i = span + 1; i > 0; --i) {
+            float range = *(newLidar->ranges.end() - i);
+            float theta = *(newLidar->thetas.end() - i);
+            if (range != 0) {
+                front_wall_dist.push_back(range);
+                front_wall_theta.push_back(theta);
             }
-            for (int i = 0; i < 4; i++) {
-                float dist = distanceToLine(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
-                                            newLidar->thetas[corners[arrayWrap(i + 1, 4)]],
-                                            newLidar->ranges[corners[arrayWrap(i + 1, 4)]]);
-                dist_to_wall.push_back(dist);
-                printf("Dist %d = %f\n", i, dist);
-            }
-            for (int i = 0; i < 4; i++) {
-                float corner_angle1 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[i]]);
-                float corner_angle2 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[arrayWrap(i + 1, 4)]]);
-                printf("corner difference: %f, %f\n", corner_angle1, corner_angle2);
-                if (corner_angle1 < 0 && corner_angle2 < 0) {
-                    cur_wf_pos.y = dist_to_wall[i];
-                } else if (corner_angle1 < 0 && corner_angle2 > 0) {
-                    cur_wf_pos.x = dist_to_wall[i];
-                }
-            }
-            printf("world frame pose: %f, %f\n", cur_wf_pos.x, cur_wf_pos.y);
         }
+        for (int i = 0; i < span; ++i) {
+            float range = *(newLidar->ranges.begin() + i);
+            float theta = *(newLidar->thetas.begin() + i);
+            if (range != 0) {
+                front_wall_dist.push_back(range);
+                front_wall_theta.push_back(theta);
+            }
+        }
+
+        // use minumum value as the distance to the walls
+        int idx_dist_right = std::min_element(right_wall_dist.begin(), right_wall_dist.end()) - right_wall_dist.begin();
+        int idx_dist_back = std::min_element(back_wall_dist.begin(), back_wall_dist.end()) - back_wall_dist.begin();
+        int idx_dist_front = std::min_element(front_wall_dist.begin(), front_wall_dist.end()) - front_wall_dist.begin();
+
+        cur_wf_pos.x = back_wall_dist[idx_dist_back];
+        cur_wf_pos.y = right_wall_dist[idx_dist_right];
+        cur_wf_pos.theta = *(newLidar->thetas.begin() + len / 4) - right_wall_theta[idx_dist_right];
+
+        lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
     }
 
     /**

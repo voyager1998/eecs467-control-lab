@@ -1,8 +1,0 @@
-struct worldframe_pose_t
-{
-    int64_t utime;
-
-    float x;
-    float y;
-
-}
