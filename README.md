@@ -8,7 +8,7 @@ M-Bot contains a LIDAR connected to a Rasperry Pi serving as a high-level contro
 ## Working Environment 
 
 * Ubuntu
-* [LCM](http://lcm-proj.github.io/)
+* [LCM](http://lcm-proj.github.io/) (C/C++ version)
 * GTK (for visualization)
 
 ## Code Structure
