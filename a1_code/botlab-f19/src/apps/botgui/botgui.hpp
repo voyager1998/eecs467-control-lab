@@ -107,6 +107,7 @@ private:
     GtkWidget* showPathCheck_;                        // Checkbox indicating if the current path should be drawn
     GtkWidget* showDistancesCheck_;                   // Checkbox indicating if the obstacle distance grid should be drawn
     GtkWidget* showFrontiersCheck_;                   // Checkbox indicating if the frontiers in the map should be shown
+    GtkWidget* showTuring_;
     GtkWidget* cmdSlider_;                            // Slider controlling cmdSpeed_
     GtkWidget* trimSlider_;                           // Slider controlling the right wheel trim
     GtkWidget* optionsBox_;                           // VBox holding all of the options widgets

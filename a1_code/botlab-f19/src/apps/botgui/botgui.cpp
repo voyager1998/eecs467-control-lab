@@ -258,8 +258,11 @@ void BotGui::render(void) {
      * 
      * Draw active turning boxes
      */
+    
     vx_buffer_t* turnBuf = vx_world_get_buffer(world_, "turning");
-    draw_turning(turning_, vx_red, turnBuf);
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(showTuring_))) {
+        draw_turning(turning_, vx_red, turnBuf);
+    }
     vx_buffer_swap(turnBuf);
 
     // If the SLAM_POSE has been assigned a color, then draw it using that color
@@ -555,6 +558,10 @@ void BotGui::createGuiLayout(GtkWidget* window, GtkWidget* vxCanvas) {
     showFrontiersCheck_ = gtk_check_button_new_with_label("Show Frontiers");
     gtk_box_pack_start(GTK_BOX(optionsBox_), showFrontiersCheck_, FALSE, TRUE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(showFrontiersCheck_), TRUE);
+
+    showTuring_ = gtk_check_button_new_with_label("Show Turning Corners");
+    gtk_box_pack_start(GTK_BOX(optionsBox_), showTuring_, FALSE, TRUE, 0);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(showTuring_), TRUE);
 
     GtkWidget* dataSeparator = gtk_hseparator_new();
     gtk_box_pack_start(GTK_BOX(optionsBox_), dataSeparator, FALSE, TRUE, 0);
