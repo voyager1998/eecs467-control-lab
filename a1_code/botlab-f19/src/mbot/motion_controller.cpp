@@ -26,6 +26,8 @@
 #define DESEIREDDIST 0.5
 #define K1 0.5
 #define K2 0.1
+#define K1C 0.8  //1.3
+#define K2C 0.2  //0.5
 
 class MotionController {
 public:
@@ -34,6 +36,7 @@ public:
     */
     MotionController(lcm::LCM *instance) : state_(State::DRIVE),
                                            keep_heading(0.0f),
+                                           target_theta(M_PI_2),
                                            lcmInstance(instance) {
         time_offset = 0;
         timesync_initialized_ = false;
@@ -151,6 +154,52 @@ public:
                 // cmd.trans_v = 0.2f;
                 cmd.trans_v = std::min(1.2 * front_wall_dist + 0.05, 0.1);
                 cmd.angular_v = -(-K1 * theta_rightwall - K2 / cmd.trans_v * (right_wall_dist - DESEIREDDIST));
+                printf("angular velocity: %f\n", cmd.angular_v);
+            }
+        } else {
+            std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
+        }
+
+        return cmd;
+    }
+
+    mbot_motor_command_t updateCommandLidarChallenge(void) {
+        mbot_motor_command_t cmd;
+        cmd.trans_v = 0.0f;
+        cmd.angular_v = 0.0f;
+        cmd.utime = now();
+
+        if (state_ == TURN) {
+            cmd.trans_v = 0.1f;
+            float diff = 0.0;
+            if (cur_pos.theta - target_theta < -M_PI) {
+                diff = target_theta - (cur_pos.theta + 2 * M_PI);
+            } else if (cur_pos.theta - target_theta > M_PI) {
+                diff = target_theta + 2 * M_PI - cur_pos.theta;
+            } else {
+                diff = target_theta - cur_pos.theta;
+            }
+
+            if (fabs(diff) <= 0.03) {
+                cmd.angular_v = 0.0f;
+                state_ = DRIVE;
+                target_theta = phaseWrap_PI(target_theta + M_PI_2);
+            } else {
+                if (diff > 0) {
+                    cmd.angular_v = -0.8 * (diff + 0.1);
+                } else {
+                    cmd.angular_v = -0.8 * (diff - 0.1);
+                }
+            }
+        } else if (state_ == DRIVE) {
+            if (front_wall_dist < DESEIREDDIST + 0.25) {
+                cmd.trans_v = 0.1f;
+                cmd.angular_v = 0.0f;
+                state_ = TURN;
+            } else {
+                // cmd.trans_v = 0.2f;
+                cmd.trans_v = std::max(0.8 * (front_wall_dist - DESEIREDDIST), 0.1);
+                cmd.angular_v = -(-K1C * theta_rightwall - K2C / cmd.trans_v * (right_wall_dist - DESEIREDDIST));
                 printf("angular velocity: %f\n", cmd.angular_v);
             }
         } else {
@@ -402,6 +451,7 @@ private:
     float front_wall_dist;
     float back_wall_dist;
     float theta_rightwall;  // counter-clock wise, when perpendicular to right wall: 0
+    float target_theta;
 
     int64_t time_offset;
     bool timesync_initialized_;
@@ -433,7 +483,7 @@ int main(int argc, char **argv) {
     while (true) {
         lcmInstance.handleTimeout(20);  // update at 50Hz minimum
         if (controller.timesync_initialized()) {
-            mbot_motor_command_t cmd = controller.updateCommandLidar();
+            mbot_motor_command_t cmd = controller.updateCommandLidarChallenge();
             lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
         }
     }
