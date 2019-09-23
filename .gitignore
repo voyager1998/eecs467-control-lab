@@ -1,0 +1,16 @@
+# latex binary files 
+*.aux
+*.log
+*.synctex*
+
+# c/c++ binary files 
+*.o
+
+# vscode config files
+.vscode
+
+# Clion config files
+a1_code/.idea/*
+
+# but not these files...
+!lcm-logfile*

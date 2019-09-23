@@ -6,101 +6,155 @@
 *******************************************************************************/
 #include "mobilebot.h"
 
+// #define TASK_3
+// #define TASK_4
+// #define TASK_5
+#define PI 3.14159265358979323846
+
 /*******************************************************************************
 * int main() 
 *
 *******************************************************************************/
-int main(){
-
+int main() {
     rc_led_set(RC_LED_GREEN, LED_OFF);
     rc_led_set(RC_LED_RED, LED_ON);
-	//set cpu freq to max performance
-	rc_cpu_set_governor(RC_GOV_PERFORMANCE);
+    //set cpu freq to max performance
+    rc_cpu_set_governor(RC_GOV_PERFORMANCE);
 
-    printf("CPU Frquency: ");
+    printf("CPU Frequency: ");
     rc_cpu_print_freq();
-    printf("\n");   
+    printf("\n");
 
     // start signal handler so we can exit cleanly
-    if(rc_enable_signal_handler()==-1){
-        fprintf(stderr,"ERROR: failed to start signal handler\n");
+    if (rc_enable_signal_handler() == -1) {
+        fprintf(stderr, "ERROR: failed to start signal handler\n");
         return -1;
     }
 
-	// start lcm handle thread
-	printf("starting lcm thread... \n");
-	lcm = lcm_create(LCM_ADDRESS);
-	pthread_t lcm_subscribe_thread;
-    rc_pthread_create(&lcm_subscribe_thread, lcm_subscribe_loop, (void*) NULL, SCHED_FIFO, LCM_PRIORITY);
+    // start lcm handle thread
+    printf("starting lcm thread... \n");
+    lcm = lcm_create(LCM_ADDRESS);
+    pthread_t lcm_subscribe_thread;
+    rc_pthread_create(&lcm_subscribe_thread, lcm_subscribe_loop, (void *)NULL, SCHED_FIFO, LCM_PRIORITY);
 
-	// start control thread
-	printf("starting setpoint thread... \n");
-	pthread_t  setpoint_thread;
-	rc_pthread_create(&setpoint_thread, setpoint_control_loop, (void*) NULL, SCHED_OTHER, 0);
+    // start control thread
+    printf("starting setpoint thread... \n");
+    pthread_t setpoint_thread;
+    rc_pthread_create(&setpoint_thread, setpoint_control_loop, (void *)NULL, SCHED_OTHER, 0);
 
     // start printf_thread if running from a terminal
     // if it was started as a background process then don't bother
     //if(isatty(fileno(stdout))){
-        printf("starting print thread... \n");
-        pthread_t  printf_thread;
-        rc_pthread_create(&printf_thread, printf_loop, (void*) NULL, SCHED_OTHER, 0);
-        rc_nanosleep(1E5);
+#ifndef TASK_3
+    printf("starting print thread... \n");
+    pthread_t printf_thread;
+    rc_pthread_create(&printf_thread, printf_loop, (void *)NULL, SCHED_OTHER, 0);
+    rc_nanosleep(1E5);
+#else
+    printf("starting print thread... \n");
+    pthread_t printf_thread;
+    rc_pthread_create(&printf_thread, printf_debug, (void *)NULL, SCHED_OTHER, 0);
+    rc_nanosleep(1E5);
+#endif
     //}
 
-	// TODO: start motion capture message recieve thread
+    // TODO: start motion capture message receive thread
 
-	// set up IMU configuration
-	printf("initializing imu... \n");
-	rc_mpu_config_t imu_config = rc_mpu_default_config();
-	imu_config.dmp_sample_rate = SAMPLE_RATE_HZ;
-	imu_config.orient = ORIENTATION_Z_UP;
-    imu_config.dmp_fetch_accel_gyro=1;
+    // set up IMU configuration
+    printf("initializing imu... \n");
+    rc_mpu_config_t imu_config = rc_mpu_default_config();
+    imu_config.dmp_sample_rate = SAMPLE_RATE_HZ;
+    imu_config.orient = ORIENTATION_Z_UP;
+    imu_config.dmp_fetch_accel_gyro = 1;
     imu_config.dmp_interrupt_sched_policy = SCHED_FIFO;
     imu_config.dmp_interrupt_priority = CONTROLLER_PRIORITY;
 
+    if (rc_mpu_initialize_dmp(&imu_data, imu_config)) {
+        fprintf(stderr, "ERROR: can't talk to IMU! Exiting.\n");
+        return -1;
+    }
 
-	if(rc_mpu_initialize_dmp(&imu_data, imu_config)){
-		fprintf(stderr,"ERROR: can't talk to IMU! Exiting.\n");
-		return -1;
-	}
+    //rc_nanosleep(5E9); // wait for imu to stabilize
 
-	//rc_nanosleep(5E9); // wait for imu to stabilize
-
-	//initialize state mutex
+    //initialize state mutex
     pthread_mutex_init(&state_mutex, NULL);
 
-	//attach controller function to IMU interrupt
-	printf("initializing controller...\n");
-	mb_initialize_controller();
+    //attach controller function to IMU interrupt
+    printf("initializing controller...\n");
+    mb_initialize_controller();
 
-	printf("initializing motors...\n");
-	mb_motor_init();
-    mb_motor_set(1,0);
-    mb_motor_set(2,0);
+    printf("initializing motors...\n");
+    mb_motor_init();
+    mb_motor_set(1, 0);
+    mb_motor_set(2, 0);
 
-	printf("initializing odometry...\n");
+    printf("initializing odometry...\n");
     rc_encoder_init();
     rc_encoder_write(1, 0);
     rc_encoder_write(2, 0);
-	mb_initialize_odometry(&mb_odometry, 0.0,0.0,0.0);
+    mb_initialize_odometry(&mb_odometry, 0.0, 0.0, 0.0);
 
-	printf("attaching imu interupt...\n");
-	rc_mpu_set_dmp_callback(&mobilebot_controller);
+    printf("attaching imu interupt...\n");
+    rc_mpu_set_dmp_callback(&mobilebot_controller);
 
-	printf("we are running!!!\n");
-	// done initializing so set state to RUNNING
-	rc_set_state(RUNNING); 
+    printf("we are running!!!\n");
+    // done initializing so set state to RUNNING
+    rc_set_state(RUNNING);
     rc_led_set(RC_LED_RED, LED_OFF);
 
-	// Keep looping until state changes to EXITING
-	while(rc_get_state()!=EXITING){
-		// other functions are handled in other threads
-		// there is no need to do anything here but sleep
+    // Keep looping until state changes to EXITING
+    while (rc_get_state() != EXITING) {
+        // other functions are handled in other threads
+        // there is no need to do anything here but sleep
         led_heartbeat();
-        rc_nanosleep(7E8);
-	}
-	rc_led_set(RC_LED_RED, LED_ON);
-	// exit cleanly
+        // rc_nanosleep(7E8);
+#ifdef TASK_4
+        mb_destroy_controller();
+        for (int turn = 0; turn < 4; turn++) {
+            if (rc_get_state() == RUNNING) {
+                mb_load_controller_config();
+                mb_initialize_controller();
+                mbot_motor_command_t motor_setpoints_msg;
+                motor_setpoints_msg.angular_v = 0;
+                motor_setpoints_msg.trans_v = 0.1;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(3E9);
+                mb_destroy_controller();
+
+                mb_load_controller_config();
+                mb_initialize_controller();
+                motor_setpoints_msg.angular_v = 0;
+                motor_setpoints_msg.trans_v = 0;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(1E9);
+                mb_destroy_controller();
+
+                mb_load_controller_config();
+                mb_initialize_controller();
+                motor_setpoints_msg.angular_v = -0.5f;
+                motor_setpoints_msg.trans_v = 0;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(2E9);
+                mb_destroy_controller();
+
+                mb_load_controller_config();
+                mb_initialize_controller();
+                motor_setpoints_msg.angular_v = 0;
+                motor_setpoints_msg.trans_v = 0;
+                mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
+                rc_nanosleep(1E9);
+                mb_destroy_controller();
+            }
+        }
+        mb_initialize_controller();
+#endif
+
+#ifdef TASK_5
+
+#endif
+    }
+    rc_led_set(RC_LED_RED, LED_ON);
+    // exit cleanly
     rc_pthread_timed_join(lcm_subscribe_thread, NULL, 1.5);
     rc_pthread_timed_join(printf_thread, NULL, 1.5);
     rc_pthread_timed_join(setpoint_thread, NULL, 1.5);
@@ -110,14 +164,13 @@ int main(){
     mb_motor_cleanup();
     rc_encoder_cleanup();
     rc_remove_pid_file();
-	 
-	return 0;
+
+    return 0;
 }
 
-
-void read_mb_sensors(){
+void read_mb_sensors() {
     pthread_mutex_lock(&state_mutex);
-    
+
     // Read IMU
     mb_state.tb_angles[0] = imu_data.dmp_TaitBryan[TB_PITCH_X];
     mb_state.tb_angles[1] = imu_data.dmp_TaitBryan[TB_ROLL_Y];
@@ -126,13 +179,13 @@ void read_mb_sensors(){
     mb_state.temp = imu_data.temp;
 
     int i;
-    for(i=0;i<3;i++){
+    for (i = 0; i < 3; i++) {
         mb_state.accel[i] = imu_data.accel[i];
         mb_state.gyro[i] = imu_data.gyro[i];
         mb_state.mag[i] = imu_data.mag[i];
     }
 
-    // Read encoders    
+    // Read encoders
     mb_state.left_encoder = ENC_LEFT_POL * rc_encoder_read(LEFT_MOTOR);
     mb_state.right_encoder = ENC_RIGHT_POL * rc_encoder_read(RIGHT_MOTOR);
 
@@ -145,19 +198,19 @@ void read_mb_sensors(){
 
     //unlock state mutex
     pthread_mutex_unlock(&state_mutex);
-
 }
 
-void publish_mb_msgs(){
+void publish_mb_msgs() {
     mbot_imu_t imu_msg;
     mbot_encoder_t encoder_msg;
     odometry_t odo_msg;
+    turn_xy_t turn_msg;
+    curr_state_t state_msg;
 
-    
     imu_msg.utime = now;
     imu_msg.temp = mb_state.temp;
     int i;
-    for(i=0;i<3;i++){
+    for (i = 0; i < 3; i++) {
         imu_msg.tb_angles[i] = mb_state.tb_angles[i];
         imu_msg.accel[i] = mb_state.accel[i];
         imu_msg.gyro[i] = mb_state.gyro[i];
@@ -174,10 +227,24 @@ void publish_mb_msgs(){
     encoder_msg.leftticks = mb_state.left_encoder_total;
     encoder_msg.rightticks = mb_state.right_encoder_total;
 
+    state_msg.utime = now;
+    state_msg.fwd_velocity = mb_state.fwd_velocity;
+    state_msg.turn_velocity = mb_state.turn_velocity;
+    state_msg.left_velocity = mb_state.left_velocity;
+    state_msg.right_velocity = mb_state.right_velocity;
+
     //publish IMU & Encoder Data to LCM
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
+    if (mb_state.turn_velocity > 0.7 || mb_state.turn_velocity < -0.7) {
+        turn_msg.x = mb_odometry.x;
+        turn_msg.y = mb_odometry.y;
+#ifdef TASK_4
+        turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
+#endif
+    }
+    curr_state_t_publish(lcm, MBOT_STATE_CHANNEL, &state_msg);
 }
 
 /*******************************************************************************
@@ -190,22 +257,22 @@ void publish_mb_msgs(){
 * 
 *
 *******************************************************************************/
-void mobilebot_controller(){
+void mobilebot_controller() {
     update_now();
     read_mb_sensors();
     mb_update_odometry(&mb_odometry, &mb_state);
     mb_controller_update(&mb_state, &mb_setpoints);
     publish_mb_msgs();
-    
-    if(!mb_setpoints.manual_ctl){
-    	mb_motor_set(RIGHT_MOTOR, mb_state.right_cmd);
-   		mb_motor_set(LEFT_MOTOR, mb_state.left_cmd);
-   	}
 
-    if(mb_setpoints.manual_ctl){
-    	mb_motor_set(RIGHT_MOTOR, (mb_setpoints.fwd_velocity + mb_setpoints.turn_velocity));
-   		mb_motor_set(LEFT_MOTOR, (mb_setpoints.fwd_velocity - mb_setpoints.turn_velocity));
-   	}
+    if (!mb_setpoints.manual_ctl) {
+        mb_motor_set(RIGHT_MOTOR, mb_state.right_cmd);
+        mb_motor_set(LEFT_MOTOR, mb_state.left_cmd);
+    }
+
+    if (mb_setpoints.manual_ctl) {
+        mb_motor_set(RIGHT_MOTOR, (mb_setpoints.fwd_velocity + mb_setpoints.turn_velocity));
+        mb_motor_set(LEFT_MOTOR, (mb_setpoints.fwd_velocity - mb_setpoints.turn_velocity));
+    }
 }
 
 /*******************************************************************************
@@ -215,11 +282,10 @@ void mobilebot_controller(){
 *  optitrack_driver must be running and optitrack must be set up
 *
 *******************************************************************************/
-void optitrack_message_handler(const lcm_recv_buf_t* rbuf,
-                                const char* channel,
-                                const pose_xyt_t* pose,
-                                void* userdata){
-
+void optitrack_message_handler(const lcm_recv_buf_t *rbuf,
+                               const char *channel,
+                               const pose_xyt_t *pose,
+                               void *userdata) {
     // lock the state mutex
     pthread_mutex_lock(&state_mutex);
     mb_state.opti_x = pose->x;
@@ -228,17 +294,15 @@ void optitrack_message_handler(const lcm_recv_buf_t* rbuf,
     pthread_mutex_unlock(&state_mutex);
 }
 
-
 /*******************************************************************************
 *  update_now()
 *
 *  updates the now global variable with the current time
 *
 *******************************************************************************/
-void update_now(){
-	now = rc_nanos_since_epoch()/1000 + time_offset;
+void update_now() {
+    now = rc_nanos_since_epoch() / 1000 + time_offset;
 }
-
 
 /*******************************************************************************
 *  timesync_handler()
@@ -247,13 +311,11 @@ void update_now(){
 *  between the Pi time and the local time
 *
 *******************************************************************************/
-void timesync_handler(const lcm_recv_buf_t * rbuf, const char *channel,
-				const timestamp_t *timestamp, void *_user){
-
-	if(!time_offset_initialized) time_offset_initialized = 1;
-	time_offset = timestamp->utime - rc_nanos_since_epoch()/1000;
+void timesync_handler(const lcm_recv_buf_t *rbuf, const char *channel,
+                      const timestamp_t *timestamp, void *_user) {
+    if (!time_offset_initialized) time_offset_initialized = 1;
+    time_offset = timestamp->utime - rc_nanos_since_epoch() / 1000;
 }
-
 
 /*******************************************************************************
 *  motor_command_handler()
@@ -262,12 +324,11 @@ void timesync_handler(const lcm_recv_buf_t * rbuf, const char *channel,
 *
 *******************************************************************************/
 void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
-                          const mbot_motor_command_t *msg, void *user){
-	mb_setpoints.fwd_velocity = msg->trans_v;
-	mb_setpoints.turn_velocity = msg->angular_v;
-
+                           const mbot_motor_command_t *msg, void *user) {
+    // printf("%f %f", msg->trans_v, msg->angular_v);
+    mb_setpoints.fwd_velocity = msg->trans_v;
+    mb_setpoints.turn_velocity = msg->angular_v;
 }
-
 
 /*******************************************************************************
 *  reset_odometry_handler()
@@ -276,7 +337,7 @@ void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
 *
 *******************************************************************************/
 void reset_odometry_handler(const lcm_recv_buf_t *rbuf, const char *channel,
-                          const reset_odometry_t *msg, void *user){
+                            const reset_odometry_t *msg, void *user) {
     mb_odometry.x = msg->x;
     mb_odometry.y = msg->y;
     mb_odometry.theta = msg->theta;
@@ -290,32 +351,27 @@ void reset_odometry_handler(const lcm_recv_buf_t *rbuf, const char *channel,
 *  TODO: Use this thread to handle changing setpoints to your controller
 *
 *******************************************************************************/
-void* setpoint_control_loop(void* ptr){
+void *setpoint_control_loop(void *ptr) {
+    // start dsm listener for radio control
+    rc_dsm_init();
 
-	// start dsm listener for radio control
-	rc_dsm_init();
+    while (1) {
+        if (rc_dsm_is_new_data()) {
+            // TODO: Handle the DSM data from the Spektrum radio receiver
+            // You may also implement switching between manual and autonomous mode
+            // using channel 5 of the DSM data.
 
-	while(1){
-		if (rc_dsm_is_new_data()) {
-	 		
-			// TODO: Handle the DSM data from the Spektrum radio reciever
-			// You may also implement switching between manual and autonomous mode
-			// using channel 5 of the DSM data.
-
-		if(rc_dsm_ch_normalized(5) > 0.0){
-			mb_setpoints.manual_ctl = 1;
-			mb_setpoints.fwd_velocity = FWD_VEL_SENSITIVITY * rc_dsm_ch_normalized(3);
-			mb_setpoints.turn_velocity = TURN_VEL_SENSITIVITY * rc_dsm_ch_normalized(4);
-		}
-		else{
-			mb_setpoints.manual_ctl = 0;
-		}
-
-	 	}
-	 	rc_nanosleep(1E9 / RC_CTL_HZ);
-	}
+            if (rc_dsm_ch_normalized(5) > 0.0) {
+                mb_setpoints.manual_ctl = 1;
+                mb_setpoints.fwd_velocity = FWD_VEL_SENSITIVITY * rc_dsm_ch_normalized(3);
+                mb_setpoints.turn_velocity = TURN_VEL_SENSITIVITY * rc_dsm_ch_normalized(4);
+            } else {
+                mb_setpoints.manual_ctl = 0;
+            }
+        }
+        rc_nanosleep(1E9 / RC_CTL_HZ);
+    }
 }
-
 
 /*******************************************************************************
 * lcm_subscribe_loop() 
@@ -325,7 +381,7 @@ void* setpoint_control_loop(void* ptr){
 *
 * TODO: Add other subscriptions as needed
 *******************************************************************************/
-void *lcm_subscribe_loop(void *data){
+void *lcm_subscribe_loop(void *data) {
     // pass in lcm object instance, channel from which to read from
     // function to call when data receiver over the channel,
     // and the lcm instance again?
@@ -334,28 +390,76 @@ void *lcm_subscribe_loop(void *data){
                          optitrack_message_handler,
                          NULL);
 
-    mbot_motor_command_t_subscribe(lcm, 
-    							   MBOT_MOTOR_COMMAND_CHANNEL, 
-    							   motor_command_handler, 
-    							   NULL);
+    mbot_motor_command_t_subscribe(lcm,
+                                   MBOT_MOTOR_COMMAND_CHANNEL,
+                                   motor_command_handler,
+                                   NULL);
 
-	timestamp_t_subscribe(lcm, 
-						  MBOT_TIMESYNC_CHANNEL, 
-						  timesync_handler, 
-						  NULL);
-
-    reset_odometry_t_subscribe(lcm, 
-                          RESET_ODOMETRY_CHANNEL, 
-                          reset_odometry_handler, 
+    timestamp_t_subscribe(lcm,
+                          MBOT_TIMESYNC_CHANNEL,
+                          timesync_handler,
                           NULL);
 
-    while(1){
+    reset_odometry_t_subscribe(lcm,
+                               RESET_ODOMETRY_CHANNEL,
+                               reset_odometry_handler,
+                               NULL);
+
+    while (1) {
         // define a timeout (for erroring out) and the delay time
         lcm_handle_timeout(lcm, 1);
         rc_nanosleep(1E9 / LCM_HZ);
     }
     lcm_destroy(lcm);
     return 0;
+}
+
+void *printf_debug(void *ptr) {
+    rc_state_t last_state, new_state;  // keep track of last state
+    while (rc_get_state() != EXITING) {
+        new_state = rc_get_state();
+        // check if this is the first time since being paused
+        if (new_state == RUNNING && last_state != RUNNING) {
+            printf("\nRUNNING...\n");
+            // printf("           SENSORS           |           ODOMETRY          |     SETPOINTS     |");
+            printf("SENSORS | ODOMETRY |");
+            printf("\n");
+            // printf("  IMU θ  |");
+            printf("  X_DOT  |");
+            // printf("  θ_DOT  |");
+            printf("    X    |");
+            // printf("    Y    |");
+            // printf("    θ    |");
+            // printf("   FWD   |");
+            // printf("   TURN  |");
+
+            printf("\n");
+        } else if (new_state == PAUSED && last_state != PAUSED) {
+            printf("\nPAUSED\n");
+        }
+        last_state = new_state;
+
+        if (new_state == RUNNING) {
+            printf("\r");
+            //Add Print statements here, do not follow with /n
+            // printf("%7.3f  |", mb_state.tb_angles[2]);
+            printf("%7.3f  |", mb_state.fwd_velocity);
+            // printf("%7.3f  |", mb_state.turn_velocity);
+            printf("%7.3f  |", mb_odometry.x);
+            // printf("%7.3f  |", mb_odometry.y);
+            // printf("%7.3f  |", mb_odometry.theta);
+            // printf("%7.3f  |", mb_setpoints.fwd_velocity);
+            // printf("%7.3f  |", mb_setpoints.turn_velocity);
+            printf("%7.3f  |", mb_state.left_velocity);
+            printf("%7.3f  ", mb_state.right_velocity);
+
+            printf("\n");
+
+            // fflush(stdout);
+        }
+        rc_nanosleep(1E9 / PRINTF_HZ);
+    }
+    return NULL;
 }
 
 /*******************************************************************************
@@ -366,57 +470,55 @@ void *lcm_subscribe_loop(void *data){
 *
 * TODO: Add other data to help you tune/debug your code
 *******************************************************************************/
-void* printf_loop(void* ptr){
-	rc_state_t last_state, new_state; // keep track of last state
-	while(rc_get_state()!=EXITING){
-		new_state = rc_get_state();
-		// check if this is the first time since being paused
-		if(new_state==RUNNING && last_state!=RUNNING){
-			printf("\nRUNNING...\n");
-			printf("           SENSORS           |           ODOMETRY          |     SETPOINTS     |");
-			printf("\n");
-			printf("  IMU θ  |");
-			printf("  X_DOT  |");
-			printf("  θ_DOT  |");
-			printf("    X    |");
-			printf("    Y    |");
-			printf("    θ    |");
-			printf("   FWD   |");
+void *printf_loop(void *ptr) {
+    rc_state_t last_state, new_state;  // keep track of last state
+    while (rc_get_state() != EXITING) {
+        new_state = rc_get_state();
+        // check if this is the first time since being paused
+        if (new_state == RUNNING && last_state != RUNNING) {
+            printf("\nRUNNING...\n");
+            printf("           SENSORS           |           ODOMETRY          |     SETPOINTS     |");
+            printf("\n");
+            printf("  IMU θ  |");
+            printf("  X_DOT  |");
+            printf("  θ_DOT  |");
+            printf("    X    |");
+            printf("    Y    |");
+            printf("    θ    |");
+            printf("   FWD   |");
             printf("   TURN  |");
 
-			printf("\n");
-		}
-		else if(new_state==PAUSED && last_state!=PAUSED){
-			printf("\nPAUSED\n");
-		}
-		last_state = new_state;
-		
-		if(new_state == RUNNING){
-			printf("\r");
-			//Add Print stattements here, do not follow with /n
-			printf("%7.3f  |", mb_state.tb_angles[2]);
-			printf("%7.3f  |", mb_state.fwd_velocity);
-			printf("%7.3f  |", mb_state.turn_velocity);
-			printf("%7.3f  |", mb_odometry.x);
-			printf("%7.3f  |", mb_odometry.y);
-			printf("%7.3f  |", mb_odometry.theta);
-			printf("%7.3f  |", mb_setpoints.fwd_velocity);
+            printf("\n");
+        } else if (new_state == PAUSED && last_state != PAUSED) {
+            printf("\nPAUSED\n");
+        }
+        last_state = new_state;
+
+        if (new_state == RUNNING) {
+            printf("\r");
+            //Add Print statements here, do not follow with /n
+            printf("%7.3f  |", mb_state.tb_angles[2]);
+            printf("%7.3f  |", mb_state.fwd_velocity);
+            printf("%7.3f  |", mb_state.turn_velocity);
+            printf("%7.3f  |", mb_odometry.x);
+            printf("%7.3f  |", mb_odometry.y);
+            printf("%7.3f  |", mb_odometry.theta);
+            printf("%7.3f  |", mb_setpoints.fwd_velocity);
             printf("%7.3f  |", mb_setpoints.turn_velocity);
 
-			fflush(stdout);
-		}
-		rc_nanosleep(1E9 / PRINTF_HZ);
-	}
-	return NULL;
-} 
+            fflush(stdout);
+        }
+        rc_nanosleep(1E9 / PRINTF_HZ);
+    }
+    return NULL;
+}
 
-void led_heartbeat(){
-        rc_led_set(RC_LED_GREEN, LED_ON);
-        rc_nanosleep(1E8);
-        rc_led_set(RC_LED_GREEN, LED_OFF);
-        rc_nanosleep(1E8);
-        rc_led_set(RC_LED_GREEN, LED_ON);
-        rc_nanosleep(1E8);
-        rc_led_set(RC_LED_GREEN, LED_OFF);
-
+void led_heartbeat() {
+    rc_led_set(RC_LED_GREEN, LED_ON);
+    rc_nanosleep(1E8);
+    rc_led_set(RC_LED_GREEN, LED_OFF);
+    rc_nanosleep(1E8);
+    rc_led_set(RC_LED_GREEN, LED_ON);
+    rc_nanosleep(1E8);
+    rc_led_set(RC_LED_GREEN, LED_OFF);
 }

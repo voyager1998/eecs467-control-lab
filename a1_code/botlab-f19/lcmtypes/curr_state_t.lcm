@@ -1,0 +1,10 @@
+struct curr_state_t
+{
+    int64_t utime;
+
+    float fwd_velocity;
+    float turn_velocity;
+    float left_velocity;
+    float right_velocity;
+
+}

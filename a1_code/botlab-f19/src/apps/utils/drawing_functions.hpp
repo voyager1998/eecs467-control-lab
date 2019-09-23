@@ -11,8 +11,8 @@ class particles_t;
 class pose_xyt_t;
 class lidar_t;
 class robot_path_t;
+class turn_xy_t;
 struct frontier_t;
-
 
 /**
 * draw_robot draws the robot as an isoceles triangle. The center of the triangle is located at the robot's current
@@ -105,11 +105,21 @@ void draw_distance_grid(const ObstacleDistanceGrid& grid, float cspaceDistance, 
 * \param    color               Color to draw the frontiers
 * \param    buffer              Buffer to add the frontiers to
 */
-void draw_frontiers(const std::vector<frontier_t>& frontiers, 
-                    double metersPerCell, 
-                    const float* color, 
+void draw_frontiers(const std::vector<frontier_t>& frontiers,
+                    double metersPerCell,
+                    const float* color,
                     vx_buffer_t* buffer);
 
+/**
+ * ZHIHAO RUAN:
+ * draw_turning draws the indicator box required in Task 2.
+ * 
+ * @param    pose        Pose at which to draw the robot
+ * @param    color       Color to draw the robot
+ * @param    buffer      Buffer to add the robot object to
+ */
+void draw_turning(const std::vector<turn_xy_t>& turn,
+                  const float* color,
+                  vx_buffer_t* buffer);
 
-
-#endif // APPS_UTILS_DRAWING_FUNCTIONS_HPP
+#endif  // APPS_UTILS_DRAWING_FUNCTIONS_HPP

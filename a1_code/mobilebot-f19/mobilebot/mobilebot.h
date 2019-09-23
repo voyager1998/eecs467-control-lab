@@ -36,6 +36,8 @@
 #include "../lcmtypes/oled_message_t.h"
 #include "../lcmtypes/timestamp_t.h"
 #include "../lcmtypes/reset_odometry_t.h"
+#include "../lcmtypes/turn_xy_t.h"
+#include "../lcmtypes/curr_state_t.h"
 
 #include "../common/mb_defs.h"
 #include "../common/mb_structs.h"
@@ -44,7 +46,7 @@
 #include "../common/mb_motor.h"
 
 // global variables
-lcm_t * lcm;
+lcm_t* lcm;
 rc_mpu_data_t imu_data;
 pthread_mutex_t state_mutex;
 mb_state_t mb_state;
@@ -62,26 +64,27 @@ void publish_mb_msgs();
 void cleanup_threads();
 void led_heartbeat();
 
-
 //LCM handler functions
 void optitrack_message_handler(const lcm_recv_buf_t* rbuf,
                                const char* channel,
                                const pose_xyt_t* pose,
                                void* userdata);
 
-void motor_command_handler(const lcm_recv_buf_t *rbuf, 
-                                  const char *channel,
-                                  const mbot_motor_command_t *msg, 
-                                  void *user);
+void motor_command_handler(const lcm_recv_buf_t* rbuf,
+                           const char* channel,
+                           const mbot_motor_command_t* msg,
+                           void* user);
 
-void timesync_handler(const lcm_recv_buf_t * rbuf, 
-                             const char *channel,
-                             const timestamp_t *timestamp, 
-                             void *_user);
+void timesync_handler(const lcm_recv_buf_t* rbuf,
+                      const char* channel,
+                      const timestamp_t* timestamp,
+                      void* _user);
 
 //thread functions
 void* setpoint_control_loop(void* ptr);
+void* printf_debug(void* ptr);
 void* printf_loop(void* ptr);
 void* lcm_subscribe_loop(void* ptr);
+void* motor_loop(void* ptr);
 
 #endif
