@@ -98,6 +98,7 @@ private:
 
     // >>> ZHIHAO RUAN: self-defined variable starts here!
     std::vector<turn_xy_t> turning_;
+    pose_xyt_t cur_wf_pos;
 
     // Widgets w/variable input/output
     GtkWidget* showMapCheck_;                         // Checkbox indicating if the map should be drawn
@@ -106,6 +107,7 @@ private:
     GtkWidget* showPathCheck_;                        // Checkbox indicating if the current path should be drawn
     GtkWidget* showDistancesCheck_;                   // Checkbox indicating if the obstacle distance grid should be drawn
     GtkWidget* showFrontiersCheck_;                   // Checkbox indicating if the frontiers in the map should be shown
+    GtkWidget* showTuring_;
     GtkWidget* cmdSlider_;                            // Slider controlling cmdSpeed_
     GtkWidget* trimSlider_;                           // Slider controlling the right wheel trim
     GtkWidget* optionsBox_;                           // VBox holding all of the options widgets

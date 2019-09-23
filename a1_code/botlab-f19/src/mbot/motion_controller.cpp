@@ -23,7 +23,7 @@
 
 #define STOPTIME 100
 #define PI 3.14159265358979323846
-#define DESEIREDDIST 0.5
+#define DESIREDDIST 0.5
 #define K1 0.5
 #define K2 0.1
 #define K1C 0.8  //1.3
@@ -35,8 +35,10 @@ public:
     * Constructor for MotionController.
     */
     MotionController(lcm::LCM *instance) : state_(State::DRIVE),
+                                           drive_stage(LidarSquare::BOTTOM),
                                            keep_heading(0.0f),
                                            target_theta(M_PI_2),
+                                           turning(false),
                                            lcmInstance(instance) {
         time_offset = 0;
         timesync_initialized_ = false;
@@ -133,29 +135,47 @@ public:
 
         if (state_ == TURN) {
             cmd.trans_v = 0.0f;
-            if (back_wall_dist < DESEIREDDIST + 0.1 && front_wall_dist > 2 - DESEIREDDIST - 0.1) {
+            if (back_wall_dist < DESIREDDIST + 0.1 && front_wall_dist > 2 - DESIREDDIST - 0.1) {
                 cmd.angular_v = 0.0f;
                 state_ = DRIVE;
+                
+                // turning is over. reset flag.
+                turning = false;
 
                 turn_xy_t cmd;
                 cmd.x = cur_pos.x;
                 cmd.y = cur_pos.y;
                 lcmInstance->publish(MBOT_TURN_CHANNEL, &cmd);
             } else {
+                if (!turning) {
+                    /** 
+                     * if it is just about to start turning, 
+                     * update driving status
+                     */
+                    drive_stage = (LidarSquare)(((int)drive_stage + 1) % 4);
+                    turning = true;
+                }
                 cmd.angular_v = -0.5f;
-                printf("Turning, angular velocity: %f\n", cmd.angular_v);
+                // cmd.trans_v = 0.1f;
+                // printf("Turning, angular velocity: %f\n", cmd.angular_v);
             }
+
+            lcmInstance->publish(LIDAR_POSE_CHANNEL, &before_turning_wf_pos);
         } else if (state_ == DRIVE) {
-            if (front_wall_dist < DESEIREDDIST + 0.1) {
+            if (front_wall_dist < DESIREDDIST + 0.1) {
                 cmd.trans_v = 0.0f;
                 cmd.angular_v = 0.0f;
                 state_ = TURN;
+
+                before_turning_wf_pos = cur_wf_pos;
             } else {
                 // cmd.trans_v = 0.2f;
                 cmd.trans_v = std::min(1.2 * front_wall_dist + 0.05, 0.1);
-                cmd.angular_v = -(-K1 * theta_rightwall - K2 / cmd.trans_v * (right_wall_dist - DESEIREDDIST));
-                printf("angular velocity: %f\n", cmd.angular_v);
+                cmd.angular_v = -(-K1 * theta_rightwall - K2 / cmd.trans_v * (right_wall_dist - DESIREDDIST));
+                // printf("angular velocity: %f\n", cmd.angular_v);
             }
+
+            lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
         } else {
             std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
         }
@@ -254,102 +274,25 @@ public:
         cur_state.right_velocity = state->right_velocity;
     }
 
-    void handleLIDAR1(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
-        int count = newLidar->num_ranges;
-        std::vector<int> corners;
-        int compare_num = 20;
-        for (int i = 0; i < count; i++) {
-            int flag = 0;  // 0 for it is local max
-            if (i < compare_num) {
-                for (int j = arrayWrap(i - compare_num, count); j < count; j++) {
-                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                        flag = 1;
-                        break;
-                    }
-                }
-                if (flag == 0) {
-                    for (int j = 0; j < i + compare_num; j++) {
-                        if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                            flag = 1;
-                            break;
-                        }
-                    }
-                }
-            } else if (i > count - compare_num) {
-                for (int j = arrayWrap(i - compare_num, count); j < count; j++) {
-                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                        flag = 1;
-                        break;
-                    }
-                }
-                if (flag == 0) {
-                    for (int j = 0; j < arrayWrap(i + compare_num, count); j++) {
-                        if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                            flag = 1;
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (int j = i - compare_num; j < i + compare_num; j++) {
-                    if (newLidar->ranges[j] > newLidar->ranges[i]) {
-                        flag = 1;
-                        break;
-                    }
-                }
-            }
-            if (flag == 0) {
-                corners.push_back(i);
-            }
-        }
-        printf("---------------------------Frame---------------------------\n");
-        for (size_t i = 0; i < corners.size(); i++) {
-            printf("corner %d angle: %f\n", i, newLidar->thetas[corners[i]]);
-        }
-        std::vector<float> dist_to_wall;
-        if (corners.size() > 4 || corners.size() < 4) {
-            printf("Incorrect number of corners!!\n");
-            return;
-        } else {
-            for (int i = 0; i < 4; i++) {
-                if (fabs(fmod(newLidar->thetas[corners[arrayWrap(i + 1, 4)]] - newLidar->thetas[corners[i]], 2 * M_PI)) < 0.1) {
-                    printf("One corner two maxs!!\n");
-                    return;
-                }
-            }
-            for (int i = 0; i < 4; i++) {
-                float dist = distanceToLine(newLidar->thetas[corners[i]], newLidar->ranges[corners[i]],
-                                            newLidar->thetas[corners[arrayWrap(i + 1, 4)]],
-                                            newLidar->ranges[corners[arrayWrap(i + 1, 4)]]);
-                dist_to_wall.push_back(dist);
-                printf("Dist %d = %f\n", i, dist);
-            }
-            for (int i = 0; i < 4; i++) {
-                float corner_angle1 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[i]]);
-                float corner_angle2 = phaseWrap_PI(cur_pos.theta - newLidar->thetas[corners[arrayWrap(i + 1, 4)]]);
-                printf("corner difference: %f, %f\n", corner_angle1, corner_angle2);
-                if (corner_angle1 < 0 && corner_angle2 < 0) {
-                    cur_wf_pos.y = dist_to_wall[i];
-                } else if (corner_angle1 < 0 && corner_angle2 > 0) {
-                    cur_wf_pos.x = dist_to_wall[i];
-                }
-            }
-            printf("world frame pose: %f, %f\n", cur_wf_pos.x, cur_wf_pos.y);
-        }
-    }  //find 4 corners and then fit 4 walls
-
-    void handleLIDAR2(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
+    void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
         int count = newLidar->num_ranges;
         std::vector<float> right_wall;  //(75~105)
+        // std::vector<float> right_wall_thetas;
         std::vector<float> front_wall;  //(0~15) U (345~360)
-        std::vector<float> back_wall;   //(165~195)
+        // std::vector<float> front_wall_thetas;
+        std::vector<float> back_wall;  //(165~195)
+        // std::vector<float> back_wall_thetas;
+        // std::vector<float> left_wall;  //(255~285)
+        // std::vector<float> left_wall_thetas;
 
+        // index of distance to the right wall in newLidar array
         int index_right_dist = 0;
         float dist_to_right = 5.0f;
         for (int i = 0; i < count; i++) {
             if (newLidar->thetas[i] > 75.0 / 180.0 * M_PI && newLidar->thetas[i] < 105.0 / 180.0 * M_PI) {
                 if (newLidar->ranges[i] > 0.2) {
                     right_wall.push_back(newLidar->ranges[i]);
+                    // right_wall_thetas.push_back(newLidar->thetas[i]);
                     if (newLidar->ranges[i] < dist_to_right) {
                         dist_to_right = newLidar->ranges[i];
                         index_right_dist = i;
@@ -358,25 +301,61 @@ public:
             } else if ((newLidar->thetas[i] > 0 && newLidar->thetas[i] < 15.0 / 180.0 * M_PI) || (newLidar->thetas[i] > 345.0 / 180.0 * M_PI && newLidar->thetas[i] < 2 * M_PI)) {
                 if (newLidar->ranges[i] > 0.2) {
                     front_wall.push_back(newLidar->ranges[i]);
+                    // front_wall_thetas.push_back(newLidar->thetas[i]);
                 }
             } else if (newLidar->thetas[i] > 165.0 / 180.0 * M_PI && newLidar->thetas[i] < 195.0 / 180.0 * M_PI) {
                 if (newLidar->ranges[i] > 0.2) {
                     back_wall.push_back(newLidar->ranges[i]);
+                    // back_wall_thetas.push_back(newLidar->thetas[i]);
                 }
+                // } else if (newLidar->thetas[i] > 255.0 / 180.0 * M_PI && newLidar->thetas[i] < 285.0 / 180.0 * M_PI) {
+                //     if (newLidar->ranges[i] > 0.2) {
+                //         left_wall.push_back(newLidar->ranges[i]);
+                //         left_wall_thetas.push_back(newLidar->thetas[i]);
+                //     }
             }
         }
-        // float dist_to_right = *std::min_element(right_wall.begin(), right_wall.end());
         float dist_to_front = *std::min_element(front_wall.begin(), front_wall.end());
         float dist_to_back = *std::min_element(back_wall.begin(), back_wall.end());
-
-        printf("distance to right wall: %f\n", dist_to_right);
-        printf("distance to front wall: %f\n", dist_to_front);
+        // float dist_to_left = *std::min_element(left_wall.begin(), left_wall.end());
 
         right_wall_dist = dist_to_right;
         front_wall_dist = dist_to_front;
         back_wall_dist = dist_to_back;
+        // left_wall_dist = dist_to_left;
         theta_rightwall = newLidar->thetas[index_right_dist] - M_PI_2;
-        // lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
+
+        // calculate the world frame pose
+        // only searches for 0-120 degrees for the minimum element
+        // auto it_rightwall_dist = std::min_element(newLidar->ranges.begin(), newLidar->ranges.begin() + (int)(count / 3));
+
+        switch (drive_stage) {
+            case LidarSquare::BOTTOM:
+                cur_wf_pos.x = 2.0f - front_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = right_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = 0;
+                break;
+            case LidarSquare::RIGHT:
+                cur_wf_pos.x = 2.0f - right_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = 2.0f - front_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = M_PI_2;
+                break;
+            case LidarSquare::TOP:
+                cur_wf_pos.x = front_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = 2.0f - right_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = -M_PI;
+                break;
+            case LidarSquare::LEFT:
+                cur_wf_pos.x = right_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = front_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = -M_PI_2;
+                break;
+            default:
+                break;
+        }
+
+        printf("distance to right, front wall, cur_wf_pos: %f, %f, (%f, %f, %f)\n",
+               dist_to_right, dist_to_front, cur_wf_pos.x, cur_wf_pos.y, cur_wf_pos.theta);
     }  //only concentrate on small ranges in the forward direction and right direction
 
     /**
@@ -436,6 +415,13 @@ private:
         DRIVE,
     };
 
+    enum LidarSquare {
+        BOTTOM = 0,
+        RIGHT,
+        TOP,
+        LEFT,
+    };
+
     std::vector<pose_xyt_t> targets_;
 
     // TODO(EECS467) Initialize the state.
@@ -445,8 +431,12 @@ private:
     // controllers here.
     pose_xyt_t cur_pos;
     pose_xyt_t cur_wf_pos;
+    pose_xyt_t before_turning_wf_pos;
+    bool turning;
     curr_state_t cur_state;
+    LidarSquare drive_stage;
     float keep_heading = 0.0f;  // The heading to keep when driving straight
+    float left_wall_dist;
     float right_wall_dist;
     float front_wall_dist;
     float back_wall_dist;
@@ -476,7 +466,7 @@ int main(int argc, char **argv) {
     // For instance, instantaneous translational and rotational velocity of the robot, which is necessary
     // for your feedback controller.
     lcmInstance.subscribe(MBOT_STATE_CHANNEL, &MotionController::handleState, &controller);
-    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR2, &controller);
+    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR, &controller);
 
     signal(SIGINT, exit);
 
