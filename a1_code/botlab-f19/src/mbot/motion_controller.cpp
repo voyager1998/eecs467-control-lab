@@ -12,24 +12,30 @@
 #include <iostream>
 #include <lcm/lcm-cpp.hpp>
 #include <lcmtypes/curr_state_t.hpp>
+#include <lcmtypes/lidar_t.hpp>
 #include <lcmtypes/mbot_motor_command_t.hpp>
 #include <lcmtypes/message_received_t.hpp>
 #include <lcmtypes/odometry_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/timestamp_t.hpp>
+#include <lcmtypes/turn_xy_t.hpp>
 
 #define STOPTIME 100
 #define PI 3.14159265358979323846
+#define DESIREDDIST 0.5
+#define K1 0.5
+#define K2 0.1
+
 class MotionController {
 public:
     /**
     * Constructor for MotionController.
     */
     MotionController(lcm::LCM *instance) : state_(State::DRIVE),
-                                           wallfollower_k1(0.0),
-                                           wallfollower_k2(sqrt(4 * wallfollower_k1)),
+                                           drive_stage(LidarSquare::BOTTOM),
                                            keep_heading(0.0f),
+                                           turning(false),
                                            lcmInstance(instance) {
         time_offset = 0;
         timesync_initialized_ = false;
@@ -81,8 +87,10 @@ public:
                 } else {
                     cmd.angular_v = -1 * (diff - 0.1);
                 }
+#ifdef DEBUG
                 printf("target=%f, cur=%f, diff=%f, ang_v=%f\n",
                        pose_target.theta, cur_pos.theta, fabs(diff), cmd.angular_v);
+#endif
             }
         } else if (state_ == DRIVE) {
             float diff = sqrt(pow(pose_target.x - cur_pos.x, 2) + pow(pose_target.y - cur_pos.y, 2));
@@ -104,9 +112,67 @@ public:
 
                 cmd.angular_v = -0.5 * ang_diff;
                 cmd.trans_v = debug_trans_v;
+#ifdef DEBUG
                 printf("dir: %f, cur.theta: %f, diff: %f, angle_diff: %f, ang_v: %f\n",
                        dir, cur_pos.theta, diff, (cur_pos.theta - dir), cmd.angular_v);
+#endif
             }
+        } else {
+            std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
+        }
+
+        return cmd;
+    }
+
+    mbot_motor_command_t updateCommandLidar(void) {
+        mbot_motor_command_t cmd;
+        cmd.trans_v = 0.0f;
+        cmd.angular_v = 0.0f;
+        cmd.utime = now();
+
+        if (state_ == TURN) {
+            cmd.trans_v = 0.0f;
+            if (back_wall_dist < DESIREDDIST + 0.1 && front_wall_dist > 2 - DESIREDDIST - 0.1) {
+                cmd.angular_v = 0.0f;
+                state_ = DRIVE;
+                
+                // turning is over. reset flag.
+                turning = false;
+
+                turn_xy_t cmd;
+                cmd.x = cur_pos.x;
+                cmd.y = cur_pos.y;
+                lcmInstance->publish(MBOT_TURN_CHANNEL, &cmd);
+            } else {
+                if (!turning) {
+                    /** 
+                     * if it is just about to start turning, 
+                     * update driving status
+                     */
+                    drive_stage = (LidarSquare)(((int)drive_stage + 1) % 4);
+                    turning = true;
+                }
+                cmd.angular_v = -0.5f;
+                // cmd.trans_v = 0.1f;
+                // printf("Turning, angular velocity: %f\n", cmd.angular_v);
+            }
+
+            lcmInstance->publish(LIDAR_POSE_CHANNEL, &before_turning_wf_pos);
+        } else if (state_ == DRIVE) {
+            if (front_wall_dist < DESIREDDIST + 0.1) {
+                cmd.trans_v = 0.0f;
+                cmd.angular_v = 0.0f;
+                state_ = TURN;
+
+                before_turning_wf_pos = cur_wf_pos;
+            } else {
+                // cmd.trans_v = 0.2f;
+                cmd.trans_v = std::min(1.2 * front_wall_dist + 0.05, 0.1);
+                cmd.angular_v = -(-K1 * theta_rightwall - K2 / cmd.trans_v * (right_wall_dist - DESIREDDIST));
+                // printf("angular velocity: %f\n", cmd.angular_v);
+            }
+
+            lcmInstance->publish(LIDAR_POSE_CHANNEL, &cur_wf_pos);
         } else {
             std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
         }
@@ -159,6 +225,90 @@ public:
         cur_state.right_velocity = state->right_velocity;
     }
 
+    void handleLIDAR(const lcm::ReceiveBuffer *buf, const std::string &channel, const lidar_t *newLidar) {
+        int count = newLidar->num_ranges;
+        std::vector<float> right_wall;  //(75~105)
+        // std::vector<float> right_wall_thetas;
+        std::vector<float> front_wall;  //(0~15) U (345~360)
+        // std::vector<float> front_wall_thetas;
+        std::vector<float> back_wall;  //(165~195)
+        // std::vector<float> back_wall_thetas;
+        // std::vector<float> left_wall;  //(255~285)
+        // std::vector<float> left_wall_thetas;
+
+        // index of distance to the right wall in newLidar array
+        int index_right_dist = 0;
+        float dist_to_right = 5.0f;
+        for (int i = 0; i < count; i++) {
+            if (newLidar->thetas[i] > 75.0 / 180.0 * M_PI && newLidar->thetas[i] < 105.0 / 180.0 * M_PI) {
+                if (newLidar->ranges[i] > 0.2) {
+                    right_wall.push_back(newLidar->ranges[i]);
+                    // right_wall_thetas.push_back(newLidar->thetas[i]);
+                    if (newLidar->ranges[i] < dist_to_right) {
+                        dist_to_right = newLidar->ranges[i];
+                        index_right_dist = i;
+                    }
+                }
+            } else if ((newLidar->thetas[i] > 0 && newLidar->thetas[i] < 15.0 / 180.0 * M_PI) || (newLidar->thetas[i] > 345.0 / 180.0 * M_PI && newLidar->thetas[i] < 2 * M_PI)) {
+                if (newLidar->ranges[i] > 0.2) {
+                    front_wall.push_back(newLidar->ranges[i]);
+                    // front_wall_thetas.push_back(newLidar->thetas[i]);
+                }
+            } else if (newLidar->thetas[i] > 165.0 / 180.0 * M_PI && newLidar->thetas[i] < 195.0 / 180.0 * M_PI) {
+                if (newLidar->ranges[i] > 0.2) {
+                    back_wall.push_back(newLidar->ranges[i]);
+                    // back_wall_thetas.push_back(newLidar->thetas[i]);
+                }
+                // } else if (newLidar->thetas[i] > 255.0 / 180.0 * M_PI && newLidar->thetas[i] < 285.0 / 180.0 * M_PI) {
+                //     if (newLidar->ranges[i] > 0.2) {
+                //         left_wall.push_back(newLidar->ranges[i]);
+                //         left_wall_thetas.push_back(newLidar->thetas[i]);
+                //     }
+            }
+        }
+        float dist_to_front = *std::min_element(front_wall.begin(), front_wall.end());
+        float dist_to_back = *std::min_element(back_wall.begin(), back_wall.end());
+        // float dist_to_left = *std::min_element(left_wall.begin(), left_wall.end());
+
+        right_wall_dist = dist_to_right;
+        front_wall_dist = dist_to_front;
+        back_wall_dist = dist_to_back;
+        // left_wall_dist = dist_to_left;
+        theta_rightwall = newLidar->thetas[index_right_dist] - M_PI_2;
+
+        // calculate the world frame pose
+        // only searches for 0-120 degrees for the minimum element
+        // auto it_rightwall_dist = std::min_element(newLidar->ranges.begin(), newLidar->ranges.begin() + (int)(count / 3));
+
+        switch (drive_stage) {
+            case LidarSquare::BOTTOM:
+                cur_wf_pos.x = 2.0f - front_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = right_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = 0;
+                break;
+            case LidarSquare::RIGHT:
+                cur_wf_pos.x = 2.0f - right_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = 2.0f - front_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = M_PI_2;
+                break;
+            case LidarSquare::TOP:
+                cur_wf_pos.x = front_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = 2.0f - right_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = -M_PI;
+                break;
+            case LidarSquare::LEFT:
+                cur_wf_pos.x = right_wall_dist - DESIREDDIST;
+                cur_wf_pos.y = front_wall_dist - DESIREDDIST;
+                cur_wf_pos.theta = -M_PI_2;
+                break;
+            default:
+                break;
+        }
+
+        printf("distance to right, front wall, cur_wf_pos: %f, %f, (%f, %f, %f)\n",
+               dist_to_right, dist_to_front, cur_wf_pos.x, cur_wf_pos.y, cur_wf_pos.theta);
+    }  //only concentrate on small ranges in the forward direction and right direction
+
     /**
      * ZHIHAO RUAN:
      * 
@@ -168,10 +318,59 @@ public:
         return sqrt((target.x - cur_pos.x) * (target.x - cur_pos.x) + (target.y - cur_pos.y) * (target.y - cur_pos.y)) < threshold;
     }
 
+    /**
+     * Imitate python array indexing
+     * assume index never goes below -len
+     */
+    inline int arrayWrap(int index, int len) {
+        return (index + len) % len;
+    }
+
+    /**
+     * ZHIHAO RUAN:
+     * 
+     * Given two points in coordinates, calculate the
+     * distance between the origin and the line passing
+     * through the two points. 
+     * 
+     * First use c^2 = a^2 + b^2 - 2*a*b*cos(theta) to 
+     * get c, then use S = 0.5*a*b*sin(theta) = 0.5*c*dist
+     * to get the expected dist
+     */
+    float distanceToLine(float angle1, float range1, float angle2, float range2) {
+        // a^2+b^2-2*a*b*cos(theta)
+        float theta = fabs(angle1 - angle2);
+        float r3 = sqrt(range1 * range1 + range2 * range2 - 2 * range1 * range2 * cos(theta));
+
+        return fabs(range1 * range2 * sin(theta) / r3);
+    }
+
+    /** 
+     * Wrapper phase between -PI and PI
+     * 
+     * DON'T use fmod() anymore!!!
+     */
+    float phaseWrap_PI(float angle) {
+        while (angle > PI) {
+            angle -= 2 * PI;
+        }
+        while (angle < -PI) {
+            angle += 2 * PI;
+        }
+        return angle;
+    }
+
 private:
     enum State {
         TURN,
         DRIVE,
+    };
+
+    enum LidarSquare {
+        BOTTOM = 0,
+        RIGHT,
+        TOP,
+        LEFT,
     };
 
     std::vector<pose_xyt_t> targets_;
@@ -182,10 +381,17 @@ private:
     // TODO(EECS467) Add additional variables for the feedback
     // controllers here.
     pose_xyt_t cur_pos;
+    pose_xyt_t cur_wf_pos;
+    pose_xyt_t before_turning_wf_pos;
+    bool turning;
     curr_state_t cur_state;
-    float wallfollower_k1;
-    float wallfollower_k2;
+    LidarSquare drive_stage;
     float keep_heading = 0.0f;  // The heading to keep when driving straight
+    float left_wall_dist;
+    float right_wall_dist;
+    float front_wall_dist;
+    float back_wall_dist;
+    float theta_rightwall;  // counter-clock wise, when perpendicular to right wall: 0
 
     int64_t time_offset;
     bool timesync_initialized_;
@@ -210,13 +416,14 @@ int main(int argc, char **argv) {
     // For instance, instantaneous translational and rotational velocity of the robot, which is necessary
     // for your feedback controller.
     lcmInstance.subscribe(MBOT_STATE_CHANNEL, &MotionController::handleState, &controller);
+    lcmInstance.subscribe(LIDAR_CHANNEL, &MotionController::handleLIDAR, &controller);
 
     signal(SIGINT, exit);
 
     while (true) {
         lcmInstance.handleTimeout(20);  // update at 50Hz minimum
         if (controller.timesync_initialized()) {
-            mbot_motor_command_t cmd = controller.updateCommand();
+            mbot_motor_command_t cmd = controller.updateCommandLidar();
             lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
         }
     }

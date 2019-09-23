@@ -116,9 +116,9 @@ int main() {
                 mb_initialize_controller();
                 mbot_motor_command_t motor_setpoints_msg;
                 motor_setpoints_msg.angular_v = 0;
-                motor_setpoints_msg.trans_v = 0.2;
+                motor_setpoints_msg.trans_v = 0.1;
                 mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-                rc_nanosleep(1E9);
+                rc_nanosleep(3E9);
                 mb_destroy_controller();
 
                 mb_load_controller_config();
@@ -126,15 +126,15 @@ int main() {
                 motor_setpoints_msg.angular_v = 0;
                 motor_setpoints_msg.trans_v = 0;
                 mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-                rc_nanosleep(2E9);
+                rc_nanosleep(1E9);
                 mb_destroy_controller();
 
                 mb_load_controller_config();
                 mb_initialize_controller();
-                motor_setpoints_msg.angular_v = -PI / 4;
+                motor_setpoints_msg.angular_v = -0.5f;
                 motor_setpoints_msg.trans_v = 0;
                 mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-                rc_nanosleep(1E9);
+                rc_nanosleep(2E9);
                 mb_destroy_controller();
 
                 mb_load_controller_config();
@@ -142,7 +142,7 @@ int main() {
                 motor_setpoints_msg.angular_v = 0;
                 motor_setpoints_msg.trans_v = 0;
                 mbot_motor_command_t_publish(lcm, MBOT_MOTOR_COMMAND_CHANNEL, &motor_setpoints_msg);
-                rc_nanosleep(2E9);
+                rc_nanosleep(1E9);
                 mb_destroy_controller();
             }
         }
@@ -237,10 +237,12 @@ void publish_mb_msgs() {
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
     odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
-    if (mb_state.turn_velocity > 1 || mb_state.turn_velocity < -1) {
+    if (mb_state.turn_velocity > 0.7 || mb_state.turn_velocity < -0.7) {
         turn_msg.x = mb_odometry.x;
         turn_msg.y = mb_odometry.y;
+#ifdef TASK_4
         turn_xy_t_publish(lcm, MBOT_TURN_CHANNEL, &turn_msg);
+#endif
     }
     curr_state_t_publish(lcm, MBOT_STATE_CHANNEL, &state_msg);
 }
